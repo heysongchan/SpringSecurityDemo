@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+#spring:
+#  security:
+#    user:
+#      name: ad
+#      password: 123456
+########### mysql  #######################
+spring:
+  datasource:
+    url: jdbc:mysql://192.168.0.107:3306/test?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    username: root
+    password: 123456
+## mybatis
+mybatis:
+  mapperLocations: classpath:mysqlmapper/*.xml
+
+
+#log
+logging:
+  level:
+    root: INFO
+  config: classpath:logback-spring.xml
