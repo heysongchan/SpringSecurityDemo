@@ -31,7 +31,7 @@ public class SwaggerConfig {
 
 	private ApiInfo apiinfo() {
 		ApiInfoBuilder ab = new ApiInfoBuilder()//
-				.title("接口文档示例")//
+				.title("AUTOCDM平台接口文档示例")//
 				.description("详情")//
 				.version(VERSION)//
 				.termsOfServiceUrl("www.baidu.com")//

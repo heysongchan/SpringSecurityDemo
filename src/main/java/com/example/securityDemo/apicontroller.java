@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.securityDemo.mysql.User;
 import com.example.securityDemo.mysql.UsersService;
 
+import io.swagger.annotations.Api;
+
+@Api(tags = "开放接口")
 @RestController
 @RequestMapping("/api")
 public class apicontroller {
