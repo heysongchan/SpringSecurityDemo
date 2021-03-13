@@ -37,8 +37,9 @@ public class SwaggerConfig {
 				.title("AUTOCDM平台接口文档示例")//
 				.description("详情")//
 				.version(VERSION)//
-				.termsOfServiceUrl("www.baidu.com")//
-				.contact(new Contact("chenhs", "url", "email"));
+				.termsOfServiceUrl("http://localhost:8080/user/user/111111")//
+				.contact(new Contact("chenhs", "http://localhost:8080/user/user/2222", "email"))//
+		;
 		ApiInfo info = ab.build();
 		return info;
 	}
