@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,6 +20,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 import com.example.securityDemo.mysql.MyUserDetailsService;
 
@@ -50,6 +52,9 @@ public class config extends WebSecurityConfigurerAdapter
 //				.successHandler(this)//
 //				.failureHandler(this)//
 				.and()//
+				.sessionManagement().sessionFixation().migrateSession()//
+				.maximumSessions(1).maxSessionsPreventsLogin(false).and()//
+				.and()//
 				.rememberMe().userDetailsService(userDetailsService)//
 				.and()//
 				.csrf().disable()//
@@ -77,5 +82,10 @@ public class config extends WebSecurityConfigurerAdapter
 			log.info(authority);
 		}
 		log.info("success");
+	}
+
+	@Bean
+	public HttpSessionEventPublisher httpSessionEventPublisher() {
+		return new HttpSessionEventPublisher();
 	}
 }
