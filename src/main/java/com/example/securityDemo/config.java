@@ -62,8 +62,12 @@ public class config extends WebSecurityConfigurerAdapter
 
 	}
 
+	@Autowired
+	private MyAuthProvider authenticationProvider;
+
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.authenticationProvider(authenticationProvider);
 		super.configure(auth);
 	}
 
@@ -87,5 +91,15 @@ public class config extends WebSecurityConfigurerAdapter
 	@Bean
 	public HttpSessionEventPublisher httpSessionEventPublisher() {
 		return new HttpSessionEventPublisher();
+	}
+
+	@Bean("aa")
+	public String aa() {
+		return "aaaaaa";
+	}
+
+	@Bean("bb")
+	public String bb() {
+		return "bbbbbbbb";
 	}
 }
