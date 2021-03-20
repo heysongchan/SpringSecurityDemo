@@ -49,6 +49,12 @@
     <artifactId>swagger-bootstrap-ui</artifactId>
     <version>1.9.6</version>
 </dependency>
+<!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>fastjson</artifactId>
+    <version>1.2.75</version>
+</dependency>
 
 		<dependency>
 			<groupId>mysql</groupId>

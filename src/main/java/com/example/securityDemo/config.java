@@ -20,8 +20,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
+import com.example.securityDemo.Filter.MyFilter;
 import com.example.securityDemo.mysql.MyUserDetailsService;
 
 @EnableWebSecurity
@@ -37,18 +39,22 @@ public class config extends WebSecurityConfigurerAdapter
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		http.addFilterBefore(new MyFilter(), UsernamePasswordAuthenticationFilter.class);
 		http.authorizeRequests() //
-				.antMatchers("/admin/**").hasAuthority("a")//
-				.antMatchers("/user/**").hasAuthority("ROLE_USER")//
-//				.antMatchers("/admin/**").hasRole("ADMIN")//
-//				.antMatchers("/user/**").hasRole("USER")//
+
+				.antMatchers("/aa/**").hasAuthority("a")//
 				.antMatchers("/**").permitAll()//
+				.antMatchers("/admin/**").hasAuthority("a")//
+//				.antMatchers("/user/**").hasAuthority("ROLE_USER")//
+////				.antMatchers("/admin/**").hasRole("ADMIN")//
+////				.antMatchers("/user/**").hasRole("USER")//
+//				.antMatchers("/**").permitAll()//
 				.anyRequest().authenticated()//
 				.and()//
 				.formLogin()//
 				.loginPage("/login.html")//
 				.permitAll()//
-				.loginProcessingUrl("/aa")// 这里设置from中的action的值 这个url和html中form的action要一致
+				.loginProcessingUrl("/login")// 这里设置from中的action的值 这个url和html中form的action要一致
 //				.successHandler(this)//
 //				.failureHandler(this)//
 				.and()//
@@ -74,7 +80,8 @@ public class config extends WebSecurityConfigurerAdapter
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
-		log.info("failure");
+		log.info("failure    " + request.getRequestURI());
+		response.sendRedirect("/login.html");
 	}
 
 	@Override
@@ -83,9 +90,14 @@ public class config extends WebSecurityConfigurerAdapter
 		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 		for (GrantedAuthority g : authorities) {
 			String authority = g.getAuthority();
-			log.info(authority);
+			log.info("authority  " + authority);
 		}
-		log.info("success");
+		log.info("success  " + request.getRequestURI());
+//		ServletOutputStream out = response.getOutputStream();
+//		Object un = authentication.getPrincipal();
+//		com.example.securityDemo.mysql.User u = (com.example.securityDemo.mysql.User) un;
+//		ByteArrayInputStream in = new ByteArrayInputStream(u.getUsername().getBytes("utf-8"));
+//		FileCopyUtils.copy(in, out);
 	}
 
 	@Bean
@@ -102,4 +114,12 @@ public class config extends WebSecurityConfigurerAdapter
 	public String bb() {
 		return "bbbbbbbb";
 	}
+
+//	@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "session")
+//	@Bean
+//	public User u() {
+//		User uu = new User();
+//		uu.setUsername("aaaaaaaaaaaaaa");
+//		return uu;
+//	}
 }

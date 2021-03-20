@@ -4,8 +4,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,11 +43,11 @@ public class usercontroller {
 		return id;
 	}
 
-	@ApiOperation(value = "修改用户", notes = "传入用户信息进行更新修改")
-	@PutMapping("/user")
-	public String updateUser(@RequestBody User user) {
-		return user.toString();
-	}
+//	@ApiOperation(value = "修改用户", notes = "传入用户信息进行更新修改")
+//	@PutMapping("/user")
+//	public String updateUser(@RequestBody User user) {
+//		return user.toString();
+//	}
 
 	@ApiIgnore
 	@GetMapping("/user/test")
