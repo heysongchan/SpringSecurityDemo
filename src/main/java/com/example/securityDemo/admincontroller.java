@@ -42,8 +42,12 @@ public class admincontroller {
 	@GetMapping("/getUser")
 	public String getUser(HttpServletRequest req) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User u = (User) principal;
-		String str = JSONObject.toJSONString(u);
+		String str = principal.toString();
+		if (principal instanceof User) {
+			User u = (User) principal;
+			str = JSONObject.toJSONString(u);
+		}
+
 		return str;
 	}
 }

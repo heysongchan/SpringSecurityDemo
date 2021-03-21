@@ -27,13 +27,13 @@ import com.example.securityDemo.Filter.MyFilter;
 import com.example.securityDemo.mysql.MyUserDetailsService;
 
 @EnableWebSecurity
-public class config extends WebSecurityConfigurerAdapter
+public class SecurityConfig extends WebSecurityConfigurerAdapter
 		implements AuthenticationSuccessHandler, AuthenticationFailureHandler {
 	private Logger log;
 	@Autowired
 	private MyUserDetailsService userDetailsService;
 
-	public config() {
+	public SecurityConfig() {
 		log = LoggerFactory.getLogger(this.getClass());
 	}
 
