@@ -22,7 +22,7 @@ import springfox.documentation.annotations.ApiIgnore;
 public class usercontroller {
 	@ApiOperation(value = "查询用户", notes = "根据 id 查询用户")
 	@ApiImplicitParam(paramType = "path", name = "id", value = "用户 id", required = true)
-	@GetMapping("/user/{id}")
+	@GetMapping(value = "/query/{id}", produces = "application/json")
 	public String getUserById(@PathVariable Integer id) {
 		return "查找的用户id是：" + id;
 	}
@@ -31,14 +31,14 @@ public class usercontroller {
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "query", name = "username", value = "用户名", required = true, defaultValue = "test"),
 			@ApiImplicitParam(paramType = "query", name = "password", value = "密码", required = true, defaultValue = "123") })
-	@PostMapping("/user")
+	@PostMapping(value = "/add")
 	public String addUser(@RequestParam String username, @RequestParam String password) {
 		return "新增用户：" + username + " " + password;
 	}
 
 	@ApiOperation(value = "删除用户", notes = "根据 id 删除用户")
 	@ApiResponses({ @ApiResponse(code = 200, message = "删除成功！"), @ApiResponse(code = 500, message = "删除失败！") })
-	@DeleteMapping("/user/{id}")
+	@DeleteMapping("/del/{id}")
 	public Integer deleteUserById(@PathVariable Integer id) {
 		return id;
 	}
