@@ -4,10 +4,91 @@
 <head>
     <title>登录</title>
     <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="./js/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="./js/themes/icon.css">
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/jquery.easyui.min.js"></script>
 </head>
 
 <body>
-    aaaaaaaaaaaaccccccccccc
+    <a id="btn" href="#">增加标准</a>
+    <a id="btn1" href="#">删除标准</a>
+    <input id="cbx" name="dept" value="">
+    <div id="dd">content</div>
+
+
+    <div id="tt"></div>
+    <script>
+
+        $(function () {
+            $('#btn').linkbutton({
+                width: "10%", height: 32, iconCls: 'icon-add',
+                onClick: function (a) {
+                    $.getJSON("/api/aa", function (result) {
+                        $("#tt").datagrid({
+                            data: result,
+                            onLoadSuccess: function (data) {
+                                $("a[name='opera']").linkbutton({
+                                    plain: true, iconCls: 'icon-add',
+                                    onClick: function (a) {
+                                        $("#dd").dialog({ title: "title", width: "60%", height: 600 });
+                                    }
+                                });
+                                var merges = [{
+                                    index: 0,
+                                    rowspan: 2
+                                }, {
+                                    index: 2,
+                                    rowspan: 2
+                                }];
+                                for (var i = 0; i < merges.length; i++)
+                                    $('#tt').datagrid('mergeCells', {
+                                        index: merges[i].index,
+                                        field: 'id',
+                                        rowspan: merges[i].rowspan
+                                    });
+                            }
+                        })
+                    });
+                }
+            });
+            $('#btn1').linkbutton({
+                width: "10%", height: 32, iconCls: 'icon-remove',
+                onClick: function (a) {
+
+                }
+            });
+            $("#cbx").combobox({
+                label: 'tt', labelWidth: '20%',
+                valueField: "id", textField: "name", width: "10%",
+                url: "/api/bb", queryParams: { a: 'aaaaaa' },
+                method: "get", limitToList: true,
+                onSelect: function (a) {
+                    alert('a');
+                }
+            });
+
+
+
+
+            $("#tt").datagrid({
+                width: window.innerWidth / 2,
+                columns: [[{
+                    field: "id", title: "iddddddddd"
+                },
+                {
+                    field: "name", title: "名称", align: 'center', width: $(this).width() * 0.3, formatter: function (value, row, index) {
+                        var str = '<a href="#" name="opera" class="easyui-linkbutton" ></a>';
+                        return str;
+                    }
+                }
+                ]]
+            })
+
+
+
+        })
+    </script>
 </body>
 
 

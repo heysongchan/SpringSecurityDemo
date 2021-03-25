@@ -10,8 +10,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.example.securityDemo.mysql.User;
 import com.example.securityDemo.mysql.UsersService;
 
@@ -41,5 +44,30 @@ public class apicontroller {
 		List<User> all = s.selectByUsername("user");
 
 		return "api api";
+	}
+
+	@GetMapping("/aa")
+	public String aa() {
+		JSONArray array = new JSONArray();
+		JSONObject obj = new JSONObject();
+		array.add(obj);
+		obj.put("id", "id");
+		obj.put("name", "name");
+		return array.toJSONString();
+	}
+
+	@GetMapping("/bb")
+	public String bb(@RequestParam("a") String a) {
+		log.info(a);
+		JSONArray array = new JSONArray();
+		JSONObject obj = new JSONObject();
+		obj.put("id", "id1");
+		obj.put("name", "name1");
+		array.add(obj);
+		obj = new JSONObject();
+		obj.put("id", "id2");
+		obj.put("name", "name2");
+		array.add(obj);
+		return array.toJSONString();
 	}
 }
