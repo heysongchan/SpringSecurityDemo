@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            起止日期框插件
+        </title>
+        <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../demo.css">
+        <script type="text/javascript" src="../../jquery.min.js">
+        </script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js">
+        </script>
+
+    </head>
+    
+    <body>
+        <script type="text/javascript" src="http://127.0.0.1/easyui/example/c6/start_end.js"></script>
+        <div id="se">
+        </div>
+        <script>
+            $(function() {
+                //设置默认配置对象======================================
+                var date = new Date();
+                var year = date.getFullYear();
+                var month = date.getMonth() + 1;
+                var day = date.getDate();
+                //当前时间
+                var now = year + '/' + month + '/' + day;
+                var t = new Date(date.getTime() - 1000 * 60 * 60 * 24 * 7);
+                //当前时间的前一周时间
+                var p_week = t.getFullYear() + '/' + (t.getMonth() + 1) + '/' + t.getDate();
+                //获取默认的按钮栏对象
+                var tools = $.fn.start_end.defaults.tools;
+                //使用自定义按钮对象覆盖原数组中的第二个按钮
+                tools.splice(1, 1, {
+                    text: '7天',
+                    icons: 'icon-add',
+                    handler: function(target) {
+                        return {
+                            start: p_week,
+                            end: now
+                        }
+                    }
+                });
+                $("#se").start_end({
+                    tools: tools
+                });
+            });
+        </script>
+    </body>
+
+</html>

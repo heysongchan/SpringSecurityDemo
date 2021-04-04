@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <title>
+            卡片视图
+        </title>
+   <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+   <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+   <link rel="stylesheet" type="text/css" href="../../demo.css">
+   <script type="text/javascript" src="../../jquery.min.js"></script>
+   <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+  <table id="dg-card"</table>    
+
+<script>
+var cardview = $.extend({}, $.fn.datagrid.defaults.view, {
+    renderRow: function(target, fields, frozen, rowIndex, rowData){
+		//将该行内的全部数据保存到数组中
+    	var cc = [];
+		//定义表格中的一行
+        cc.push('<td colspan=' + fields.length + ' style="padding:10px 5px;border:0;">');
+		//不对冻结的容器进行渲染
+		if (!frozen){
+			//图片数据
+            var img = rowData.img;
+            cc.push('<img src="http://127.0.0.1/easyui/example/c11/img/' + img + '" style="width:150px;float:left">');
+			//其他文本数据
+            cc.push('<div style="float:left;margin-left:20px;">');
+			//设置该行中每一列的数据，fields是保存全部字段的数组
+            for(var i=0; i<fields.length; i++){
+            	// $(target)为数据网格对象，可以通过数据网格对象调用数据网格的相关方法
+                var copts = $(target).datagrid('getColumnOption', fields[i]);
+            	// copts.title 为每列字段的名称，rowData[fields[i]]为该行中指定列的数据
+                cc.push('<p><span class="c-label">' + copts.title  + ':</span> ' + rowData[fields[i]] + '</p>');
+            }
+            cc.push('</div>');
+        }
+        cc.push('</td>');
+        //返回处理后的数据
+        return cc.join('');
+    }
+});
+
+$(function(){
+    $('#dg-card').datagrid({
+    	width:500,
+    	height:300,
+        view: cardview,
+        data:[
+		      {productname:"空调",producttype:"电器",productprice:"5000",
+		    		producttime:"2017年7月8日",img:'air.jpg'},
+		      {productname:"冰箱",producttype:"电器",productprice:"7900",
+		    		producttime:"2017年9月11日",img:'fridge.jpg'},  
+			  {productname:"瓜子",producttype:"零食",productprice:"3",
+		    		producttime:"2017年2月27日",img:'guazi.jpg'},  
+			  {productname:"薯片",producttype:"零食",productprice:"7",
+		    		producttime:"2017年2月27日",img:'shupian.jpg'},  
+			  {productname:"烤箱",producttype:"电器",productprice:"3500",
+		    		producttime:"2017年6月7日",img:'Oven.jpg'},  
+			  {productname:"电视",producttype:"电器",productprice:"4600",
+		    		producttime:"2017年9月17日",img:'television.png'},  
+		     ],
+		columns:[[
+				{field:'productname' ,title:'产品名称',width:'25%'},
+				{field:'producttype',title:'产品类型',align:'center',width:'15%'},
+				{field:'productprice' ,title:'产品价格',align:'center',width:'25%'},
+				{field:'producttime' ,title:'生产日期',align:'center',width:'25%'}
+		]],
+    });
+});
+</script>
+</body>
+</html>

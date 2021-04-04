@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>简单的CRUD应用</title>
+		<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="../../demo.css">
+		<script type="text/javascript" src="../../jquery.min.js"></script>
+		<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+	</head>
+	<body>
+	<!-- 创建数据网格 -->
+	<div id='dg-c82'></div>
+	<div id="tb-c82">
+		<a href="#" class="easyui-linkbutton" id='add-c82'    data-options="iconCls:'icon-add',plain:true">新增</a>
+		<a href="#" class="easyui-linkbutton" id='edit-c82'   data-options="iconCls:'icon-edit',plain:true">编辑</a>
+		<a href="#" class="easyui-linkbutton" id='delete-c82' data-options="iconCls:'icon-remove',plain:true">删除</a>
+	</div>
+	<!-- end 创建数据网格 -->
+	<!--对话框底部按钮-->
+	<div id="bb">
+		<a href="#" class="easyui-linkbutton" id='cancel'>取消</a>
+		<a href="#" class="easyui-linkbutton" id='ok'>确定</a>
+	</div>
+	<!--对话框-->
+	<div id="dd" class="easyui-dialog"  style="width:350px;height:400px;"
+        data-options="resizable:true,modal:true,closed:true,buttons:'#bb'">
+        <!-- 表单 -->
+        <form id="ff" method="post" style="padding:5px 0px 0px 15px">
+				<input id="productname" name="productname" class="easyui-textbox"
+				data-options = "label:'产品名称：',width:400,labelWidth:100,cls:'block',required:true,"
+				>
+				<input id="producttype" name="producttype">
+				<input id="productprice" name="productprice">
+				<input id="productvolume" name="productvolume">
+				<input id="producttime"  name = "producttime">
+				<input id="productaddress" name="productaddress">
+				<input id="id" name="id" style='display:none'> 
+		</form>
+	</div>
+
+	<script>
+		$(function(){
+			//初始化数据网格==========================================================================
+			
+			$("#dg-c82").datagrid({
+				width:610,
+				toolbar:'#tb-c82',
+				url:"http://127.0.0.1/easyui/example/c8/server/retrieveProduct.php",
+				singleSelect:true,
+				columns:[
+					[
+						{field:'id' ,title:'产品编号',align:'center',width:'100',hidden:true},
+						{field:'productname' ,title:'产品名称',align:'center',width:'100'},
+						{field:'producttype',title:'产品类型',align:'center',width:'100',formatter:formatProductType},
+						{field:'productprice' ,title:'产品价格',align:'center',width:'100'},
+						{field:'producttime' ,title:'上架时间',align:'center',width:'100',formatter:formatProductTime},
+						{field:'productaddress' ,title:'产地',align:'center',width:'100',formatter:formatProductAddress},
+						{field:'productvolume' ,title:'销售量',align:'center',width:'100'},
+				]],
+				loadMsg:"数据正在加载，请稍等",
+			});
+			//格式化上架时间
+			function formatProductTime(value,row,index){
+				var date=new Date(Date.parse(value));
+				var Year=date.getFullYear();
+				var Month=date.getMonth()+1;
+				var Day=date.getDate();
+				return  Year+"年"+Month+"月"+Day+"日";				
+			}
+			//格式化产地
+			function formatProductAddress(value,row,index){
+				switch(value){
+					case "1":
+						return  "北京";
+					case "2":
+						return "上海";
+					case "3":
+						return  "南京";
+					default:
+						return value;
+				}
+			}
+			//格式化产品类型
+			function formatProductType(value,row,index){
+				if(value == "1"){
+					return "电器";
+				}else if(value == "2"){
+					return "食品";
+				}else{
+					return value;
+				}
+			}
+			
+			//初始化表单=============================================================================
+			
+			//使用组合框来设计产品类型
+			$("#producttype").combobox({
+				label:'产品类型：',
+				required:true,
+				valueField:'id',
+				textField:'typename',
+				width:400,
+				labelWidth:100,
+				cls:'block',
+				data:[
+				      {id:1,typename:'电器'},
+				      {id:2,typename:'食品'}
+				]
+			});
+			//使用数字框来设计价格输入框
+			$("#productprice").numberbox({
+				required:true,
+				label:'产品价格：',
+				min:0,
+				width:400,
+				labelWidth:100,
+				precision:2,
+				prefix:'$',
+				cls:'block',
+			});
+			//使用数字微调器来设计销量输入框
+			$("#productvolume").numberspinner({
+				required:true,
+				label:'产品销量：',
+				min:0,
+				width:400,
+				labelWidth:100,
+				cls:'block',
+			});
+			//使用日期框来设计上架时间
+			$("#producttime").datebox({
+				required:true,
+				label:'上架时间：',
+				width:400,
+				panelWidth:300,
+				labelWidth:100,
+				cls:'block',
+				editable:false,
+				currentText:"今天",
+				closeText:"关闭",
+			});
+			//设置日历的显示格式
+			$("#producttime").datebox("calendar").calendar({
+				/*初始化为当前日期，Date对象可以通过毫秒数以及日期格式进行创建，如果不填写
+				创建条件的话默认以当前日期进行创建*/
+				current:new Date(),
+				firstDay:"1",//设置星期一为每周的第一天
+				months:['1月', '2月', '3月', '4月', '5月','6月','7月','8月','9月','10月','11月','12月'],   			//使用中文标注月份
+				weeks:['周日','周一','周二','周三','周四','周五','周六']
+			});
+			//使用组合框设计产品产地
+			$("#productaddress").combobox({
+				required:true,
+				label:'产品产地：',
+				valueField:'id',
+				textField:'city',
+				width:400,
+				labelWidth:100,
+				cls:'block',
+				data:[
+				      {id:1,city:'北京'},
+				      {id:2,city:'上海'},
+				      {id:3,city:'南京'}
+				]
+			});
+
+			//定义当前的操作状态，
+			//当设置为1时代表时新增数据，设置为2时代表编辑数据
+			var state = "1";		
+			
+			//新增数据
+			$("#add-c82").click(function(){
+				state = "1";
+				$('#ff').form('clear');
+				$("#dd").dialog("open").dialog('center').dialog('setTitle','添加产品');
+			});
+			
+			//更新数据
+			$("#edit-c82").click(function(){
+				state = "2";
+				//获取数据网格中当前选中的行
+				var row = $("#dg-c82").datagrid("getSelected");
+				if(row){
+					$('#ff').form('load',{
+						productname:row['productname'],
+						producttype:row['producttype'],
+						productprice:row['productprice'],
+						producttime:row['producttime'],
+						productaddress:row['productaddress'],
+						productvolume:row['productvolume'],
+						id:row['id'],
+					});		
+					$("#dd").dialog("open").dialog('center').dialog('setTitle','编辑产品');
+				}						
+			});
+			
+			//删除数据
+			$("#delete-c82").click(function(){
+				//获取数据网格中当前选中的行
+				var row = $("#dg-c82").datagrid("getSelected");
+				if (row){
+	                $.messager.confirm('确认','是否确认删除这条数据?',function(r){
+	                    if (r){
+	                    	$.post('http://127.0.0.1/easyui/example/c8/server/deleteProduct.php',
+	                        		{id:row.id},function(result){
+	                            if (result.success){	                            
+	                            	//重新加载数据网格数据
+	                                $('#dg-c82').datagrid('reload');
+	                            } else {
+	                                //显示错误提示信息	                            	
+	                                $.messager.show({
+	                                    title: 'Error',
+	                                    msg: result.errorMsg
+	                                });
+	                            }
+	                        },'json');
+	                    }
+	                });
+				}
+			});
+			
+			
+			//关闭对话框
+			$("#cancel").click(function(){
+				$("#dd").dialog("close");
+			});
+			
+			//提交表单
+			$("#ok").click(function(){
+				//根据当前操作状态确定服务器地址
+				if(state == "2"){//更新数据
+					var url = "http://127.0.0.1/easyui/example/c8/server/updateProduct.php";
+				}else{//除此之外默认都是创建数据
+					var url = "http://127.0.0.1/easyui/example/c8/server/createProduct.php";
+				}
+				
+				$('#ff').form('submit',{
+					url:url,
+					onSubmit: function(){
+						//检查表单内的全部组件是否已全部验证通过,验证通过返回true
+						if($('#ff').form('validate')){
+							return true;
+						}
+						//如果没有验证通过返回false,取消此次提交表单行为
+						else{
+							return false;
+						}
+					},
+					//表单提交成功后触发
+					success:function(data){
+						//关闭进度窗口
+						$.messager.progress('close');
+						//显示提示消息
+						$.messager.alert({
+							ok:'确认',
+							title:'消息',
+							msg:'表单提交成功',
+							icon:'ok',
+						});
+						//清空表单						
+						$('#ff').form('clear');
+						//关闭对话框
+						$("#dd").dialog("close");
+						//更新数据网格
+						$("#dg-c82").datagrid('reload');
+					},
+				});
+		});
+						
+		});
+	</script>
+	</body>
+</html>
+

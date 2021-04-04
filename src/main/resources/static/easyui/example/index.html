@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>示例</title>
+        <link rel="stylesheet"  id="easyuiTheme" type="text/css" href="../themes/default/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../demo.css">
+        <script type="text/javascript" src="../jquery.min.js"></script>
+        <script type="text/javascript" src="../jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="../jquery.easyui.mobile.js"></script>
+	</head>
+	<style>
+		a{ color:Black; text-decoration:none;}
+		.easyui-accordion ul{list-style-type:none;margin:0px; padding:10px;}
+		.easyui-accordion ul li{ padding:0px;}
+		.easyui-accordion ul li a{line-height:24px;}
+		.easyui-accordion ul li div{margin:2px 0px;padding-left:10px;padding-top:2px;}
+		.easyui-accordion ul li div:hover{border:1px solid #99BBE8; background:#E0ECFF;cursor:pointer;}
+		.easyui-accordion ul li div:hover a{color:#416AA3;}
+		.icon-add-extend{background:url('img/plugin_edit.png')  no-repeat;width:18px; line-height:18px;display:inline-block;}
+		.icon-table-extend{background:url('img/table.png')  no-repeat;width:18px; line-height:18px;display:inline-block;}
+	</style>
+	<body class="easyui-layout" id='el'>
+		<div data-options="region:'north',split:true,collapsible:false" style="background:#95B8E7;height:100px">
+			 <h1>EasyUI入门到精通示例程序</h1>
+		</div>
+		<div data-options="region:'center'" style="padding:5px;background:#eee;">
+			<div id="tt" class="easyui-tabs" data-options="fit:true"></div>
+		</div>
+	</body>
+	<script>
+		$(function(){
+			//动态添加布局西部区域面板
+			$('#el').layout('add',{
+				region: 'west',
+				width: 220,
+				title: '示例程序',
+				split: true,
+				//点击折叠后的面板时，面板不会自动展开
+				expandMode:null,
+				//添加面板内容
+				content:"<div id='nav' class='easyui-accordion' "+
+						"data-options='border:false'></div>",
+			});
+			//初始化折叠面板
+			$("#nav").accordion();
+		     //定义导航中的内容
+			 var menu_content = 
+			 {"content":[
+						{"menuid":"1","menuname":"第1章",
+							"menus":[{"menuid":"11","menuname":"简单的注册页面","url":"c1/register.html"}]
+						},
+						{"menuid":"2","icon":"icon-extend-folder","menuname":"第2章",
+							"menus":[{"menuid":"21","menuname":"登录验证","url":"c2/validateLogin.html"},
+									 {"menuid":"22","menuname":"服务器验证","url":"c2/remoteValidate.html"},
+									 {"menuid":"23","menuname":"格式化组合框内容","url":"c2/comboboxFormat.html"},
+									 {"menuid":"24","menuname":"服务器端过滤组合框内容","url":"c2/comboboxFilter.html"},
+									 {"menuid":"25","menuname":"日期框","url":"c2/dateboxCHN.html"},
+									 {"menuid":"26","menuname":"日期框复用","url":"c2/shareCalendar.html"},
+									 {"menuid":"27","menuname":"文件上传","url":"c2/uploadFile.html"}
+								    ]
+						},
+						{"menuid":"3","menuname":"第3章",
+							"menus":[{"menuid":"31","menuname":"容器内拖放","url":"c3/innerDraggable.html"},
+							         {"menuid":"32","menuname":"授权拖放的组件","url":"c3/droppable.html"},
+							         {"menuid":"34","menuname":"购物车的拖放","url":"c3/shoppingCart.html"}]
+						},
+						{"menuid":"4","menuname":"第4章",
+							"menus":[{"menuid":"41","menuname":"服务器初始化折叠面板","url":"c5/accordion.html"},
+							         {"menuid":"42","menuname":"动态添加标签页","url":"c5/addtabs.html"},
+							         {"menuid":"43","menuname":"自适应高度布局","url":"c5/fitLayout.html"}
+							         ]
+						},
+						{"menuid":"5","menuname":"第5章",
+							"menus":[{"menuid":"51","menuname":"服务器初始化折叠面板","url":"c5/accordion.html"},
+							         {"menuid":"52","menuname":"动态添加标签页","url":"c5/addtabs.html"},
+							         {"menuid":"53","menuname":"自适应高度布局","url":"c5/fitLayout.html"}
+							         ]
+						},
+						{"menuid":"6","menuname":"第6章",
+							"menus":[{"menuid":"61","menuname":"创建起止日期框","url":"c6/example.html"},
+							         {"menuid":"62","menuname":"使用起止日期框插件","url":"c6/start_end.html"},
+							         ]
+						},
+						{"menuid":"7","menuname":"第7章",
+							"menus":[{"menuid":"71","menuname":"创建产品","url":"c7/createProduct.html"},
+							         {"menuid":"72","menuname":"冻结数据网格列","url":"c7/frozenColumns.html"},
+							         {"menuid":"73","menuname":"创建数据网格页脚摘要","url":"c7/datagridFooter.html"},
+							         {"menuid":"74","menuname":"数据网格检索","url":"c7/search.html"},
+							         {"menuid":"75","menuname":"数据网格行编辑","url":"c7/editorRow.html"},
+							         {"menuid":"76","menuname":"数据网格单元格编辑","url":"c7/editorCell.html"},
+							         {"menuid":"77","menuname":"数据网格服务器分页","url":"c7/remotepagination.html"},
+							         {"menuid":"78","menuname":"组合网格","url":"c7/comboGrid.html"},
+							         {"menuid":"79","menuname":"异步树","url":"c7/asyncTree.html"},
+							         {"menuid":"710","menuname":"树的操作","url":"c7/operateTree.html"},
+							         {"menuid":"711","menuname":"复杂的树形网格","url":"c7/treeGrid.html"},
+							         ]
+						},
+						{"menuid":"8","menuname":"第8章",
+							"menus":[{"menuid":"81","menuname":"创建简单的CRUD应用","url":"c8/basicCRUD.html"},
+							         {"menuid":"82","menuname":"创建CRUD数据网格","url":"c8/datagridCRUD.html"},
+							         {"menuid":"83","menuname":"自动增加网格行数据","url":"c8/expandRow.html"},
+							         ]
+						},
+						{"menuid":"9","menuname":"第9章",
+							"menus":[{"menuid":"91","menuname":"移动端登录界面","url":"c9/t1.html"},
+							         {"menuid":"92","menuname":"选项卡","url":"c9/t2.html"},
+							         ]
+						},
+						{"menuid":"10","menuname":"第10章",
+							"menus":[{"menuid":"101","menuname":"改变主题风格","url":"c10/changeTheme.html"},
+							         ]
+						},
+						{"menuid":"11","menuname":"第11章",
+							"menus":[{"menuid":"111","menuname":"详细内容视图","url":"c11/detailView.html"},
+							         {"menuid":"112","menuname":"分组视图","url":"c11/groupView.html"},
+							         {"menuid":"113","menuname":"缓存视图","url":"c11/bufferView.html"},
+							         {"menuid":"114","menuname":"虚拟滚动视图","url":"c11/scrollview.html"},
+							         {"menuid":"115","menuname":"卡片视图","url":"c11/cardView.html"},
+							         {"menuid":"116","menuname":"可编辑的树","url":"c11/editableTree.html"},
+							         {"menuid":"117","menuname":"数据网格列拖动","url":"c11/columns-ext.html"},
+							         {"menuid":"118","menuname":"数据网格本地过滤","url":"c11/localFilter.html"},
+							         {"menuid":"119","menuname":"数据网格服务器端过滤","url":"c11/remoteFilter.html"},
+							         {"menuid":"1110","menuname":"数据分析器","url":"c11/pivotGrid.html"},
+							         {"menuid":"1111","menuname":"Ribbon","url":"c11/ribbon.html"},
+							         {"menuid":"1112","menuname":"文本编辑器","url":"c11/texteditor.html"},
+							         ]
+						}]
+			 };
+			//将导航内容动态的添加到折叠面板中
+			$.each(menu_content.content, function(i, n) {
+				var menulist ='';
+					menulist +='<ul>';
+					$.each(n.menus, function(j, o) {
+						menulist += '<li><div><a id="'+o.menuid+'" href="#" ><span class="'+
+									o.icon+'" >&nbsp;</span><span class="nav" url='+o.url+'>' + 
+									o.menuname + '</span></a></div></li> ';
+					});
+				menulist += '</ul>';
+				//动态添加折叠面板中的元素
+				$('#nav').accordion('add', {
+					title: n.menuname,
+					content: menulist,
+					iconCls: 'icon ' + n.icon,
+				});
+			});
+			//导航栏中元素被点击时
+			$('.nav').click(function(){
+				var $p = $(this);
+				var title = $p.html();
+				//检查标签是否已被加载
+				var which = $('#tt').tabs('getTab',title);
+				//which指的是标签对象，返回null代表该标签不存在
+				if(which){
+					//如果该标签存在的话就在选项卡中选中它
+					$('#tt').tabs('select',title);
+				}
+				else{
+					//动态添加标签
+					$('#tt').tabs('add',{
+						//设置标签标题
+						title:title,
+						//为标签添加一个可关闭的按钮
+						closable:true,
+						//远程加载标签内容
+						href:$p.attr('url'),
+						//对加载后的数据进行过滤，仅保留<body>标签内的内容
+						extractor: function(data){
+							var pattern = /<body[^>]*>((.|[\n\r])*)<\/body>/im;
+							var matches = pattern.exec(data);
+							if (matches){
+								return "<div style='margin:20px'>"+matches[1]+"</div>";
+							} else {
+								return data;
+							}
+						}
+					});
+				}
+			});
+		});
+	</script>
+</html>
+

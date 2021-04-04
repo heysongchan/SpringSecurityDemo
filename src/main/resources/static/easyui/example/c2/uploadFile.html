@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            上传文件
+        </title>
+        <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../demo.css">
+        <script type="text/javascript" src="../../jquery.min.js">
+        </script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js">
+        </script>
+    </head>
+    
+    <body>
+		<form id="ff" method="post">
+			<!-- 只接受pdf类型文件 -->
+			<input class="easyui-filebox" name='file' style="width:300px" data-options="accept:'application/pdf'" ><br/><br/>
+			<div id="p" class="easyui-progressbar" style="width:300px;"></div><br/><br/>
+			<a id="btn" href="#" class="easyui-linkbutton">上传文件</a>
+		</form>
+		<script>
+			$(function(){
+				$("#ff").form({
+					iframe:false,
+					onProgress:function(percent){
+						$("#p").progressbar("setValue",percent);
+					}
+				});
+				$("#btn").click(function(){
+					$('#ff').form('submit',{
+						url:"http://127.0.0.1/easyui/example/c2/server/upload.php",
+					});
+				});
+
+			});
+		</script>
+
+    </body>
+
+</html>

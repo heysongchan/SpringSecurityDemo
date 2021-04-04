@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>复杂的布局</title>
+        <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../demo.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+	</head>
+	<style>
+		a{ color:Black; text-decoration:none;}
+		.easyui-accordion ul{list-style-type:none;margin:0px; padding:10px;}
+		.easyui-accordion ul li{ padding:0px;}
+		.easyui-accordion ul li a{line-height:24px;}
+		.easyui-accordion ul li div{margin:2px 0px;padding-left:10px;padding-top:2px;}
+		.easyui-accordion ul li div:hover{border:1px solid #99BBE8; background:#E0ECFF;cursor:pointer;}
+		.easyui-accordion ul li div:hover a{color:#416AA3;}
+		.icon-add-extend{background:url('img/plugin_edit.png')  no-repeat;width:18px; line-height:18px;display:inline-block;}
+		.icon-table-extend{background:url('img/table.png')  no-repeat;width:18px; line-height:18px;display:inline-block;}
+	</style>
+	<body class="easyui-layout" id='cc'>
+		<div data-options="region:'north',split:true,collapsible:false" style="background:#95B8E7;height:25px">
+			 <span>EasyUI入门到精通</span>
+		</div>
+		<div data-options="region:'center'" style="padding:5px;background:#eee;">
+			<div id="tt" class="easyui-tabs" data-options="fit:true">
+				<div title="主页" style="padding:20px;display:none;">
+					主页
+				</div>
+			</div>
+		</div>
+	</body>
+	<script>
+		$(function(){
+			//动态添加布局西部区域面板
+			$('#cc').layout('add',{
+				region: 'west',
+				width: 200,
+				title: '菜单',
+				split: true,
+				//点击折叠后的面板时，面板不会自动展开
+				expandMode:null,
+				//添加面板内容
+				content:"<div id='nav' class='easyui-accordion' "+
+						"data-options='border:false'></div>",
+			});
+			//初始化折叠面板
+			$("#nav").accordion();
+		     //定义导航中的内容
+			 var menu_content = 
+			 {"content":[
+						{"menuid":"1","icon":"icon-extend-man","menuname":"人员信息",
+							"menus":[{"menuid":"11","menuname":"添加用户",
+									  "icon":"icon-add-extend","url":"file/complexfile/adduser.html"},
+									 {"menuid":"12","menuname":"用户列表",
+									  "icon":"icon-table-extend","url":"file/complexfile/userlist.html"}
+									]
+						},
+						{"menuid":"2","icon":"icon-extend-folder","menuname":"项目管理",
+							"menus":[{"menuid":"21","menuname":"添加项目",
+									  "icon":"icon-add-extend","url":"file/complexfile/addproject.html"},
+									 {"menuid":"22","menuname":"项目列表",
+									  "icon":"icon-table-extend","url":"file/complexfile/projectlist.html"}
+								    ]
+						}]
+			 };
+			//将导航内容动态的添加到折叠面板中
+			$.each(menu_content.content, function(i, n) {
+				var menulist ='';
+					menulist +='<ul>';
+					$.each(n.menus, function(j, o) {
+						menulist += '<li><div><a id="'+o.menuid+'" href="#" ><span class="'+
+									o.icon+'" >&nbsp;</span><span class="nav" url='+o.url+'>' + 
+									o.menuname + '</span></a></div></li> ';
+					});
+				menulist += '</ul>';
+				//动态添加折叠面板中的元素
+				$('#nav').accordion('add', {
+					title: n.menuname,
+					content: menulist,
+					iconCls: 'icon ' + n.icon,
+				});
+			});
+			//导航栏中元素被点击时
+			$('.nav').click(function(){
+				var $p = $(this);
+				var title = $p.html();
+				//检查标签是否已被加载
+				var which = $('#tt').tabs('getTab',title);
+				//which指的是标签对象，返回null代表该标签不存在
+				if(which){
+					//如果该标签存在的话就在选项卡中选中它
+					$('#tt').tabs('select',title);
+				}
+				else{
+					//动态添加标签
+					$('#tt').tabs('add',{
+						//设置标签标题
+						title:title,
+						//为标签添加一个可关闭的按钮
+						closable:true,
+						//远程加载标签内容
+						href:$p.attr('url'),
+						//对加载后的数据进行过滤，进保留<body>标签内的内容
+						extractor: function(data){
+							var pattern = /<body[^>]*>((.|[\n\r])*)<\/body>/im;
+							var matches = pattern.exec(data);
+							if (matches){
+								return matches[1];
+							} else {
+								return data;
+							}
+						}
+					});
+				}
+			});
+		});
+	</script>
+</html>
+

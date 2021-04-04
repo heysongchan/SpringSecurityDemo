@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            共享日历
+        </title>
+        <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../demo.css">
+        <script type="text/javascript" src="../../jquery.min.js">
+        </script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js">
+        </script>
+    </head>
+    
+    <body>
+		<input id="dt1" type="text">
+		<input id="dt2" type="text">
+
+		<script>
+			$(function(){
+				$('#dt1').datebox({
+					width:300,
+					panelWidth:300,
+					currentText:"今天",
+					closeText:"关闭",		
+				});
+				$('#dt1').datebox('calendar').calendar({
+					current:new Date(),
+					width:400,
+					height:300,
+					firstDay:"1",
+					months:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月', '11月', '12月'],
+					weeks:['周日','周一','周二','周三','周四','周五','周六'],
+				});
+				$('#dt2').datebox("cloneFrom","#dt1");
+
+			});
+		</script>
+
+    </body>
+
+</html>

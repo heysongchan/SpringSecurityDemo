@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            组合框数据检索
+        </title>
+        <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../demo.css">
+        <script type="text/javascript" src="../../jquery.min.js">
+        </script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js">
+        </script>
+    </head>
+    
+    <body>
+    	<h1>服务器端过滤</h1>
+    	<h2>输入中国、美国、英国、法国等内容可以查看指定国家下的城市</h2>
+        <input id="cc1">
+        <script>
+            $(function() {
+                $('#cc1').combobox({
+                    //扩展自Combo的属性
+                    width: 400,
+                    panelHeight: 450,
+                    //ComboBox新增属性
+                    valueField: 'id',
+                    textField: 'city',
+                    groupField: 'country',
+                    groupFormatter: function(group) {
+                        if (group == "中国") {
+                            return "<img src='http://127.0.0.1/easyui/example/c2/img/zg.png'></img>";
+                        } else if (group == "美国") {
+                            return "<img src='http://127.0.0.1/easyui/example/c2/img/mg.png'></img>";
+                        } else if (group == "英国") {
+                            return "<img src='http://127.0.0.1/easyui/example/c2/img/yg.png'></img>";
+                        } else if (group == "法国") {
+                            return "<img src='http://127.0.0.1/easyui/example/c2/img/fg.png' width='36' height='27'></img>";
+                        } else {
+                            return "";
+                        }
+                    },
+                    formatter: function(row) {
+                        var opts = $(this).combobox("options");
+                        var text = row[opts.textField];
+                        if (text == "北京市" || text == "华盛顿" || text == "伦敦" || text == "巴黎") {
+                            return "<b>" + text + "</b>";
+                        } else {
+                            return text;
+                        }
+                    },
+                    queryParams: {
+                        "c": '中国'
+                    },
+                    method: 'get',
+                    mode: "remote",
+                    loader: function(param, success, error) {
+                        var q = param.q || ''; //获取用户输入的值，如果用户没有输入就返回一个空值
+                        if (q.length < 1) {
+                            return false;
+                        }
+                        $.ajax({
+                            url: 'http://127.0.0.1/easyui/example/c2/server/filterCountry.php?q=' + q,
+                            dataType: 'json',
+                            type: 'get',
+                            success: function(data) {
+                                success(data);
+                            },
+                            error: function() {
+                                error();
+                            }
+                        });
+                    },
+                    loadFilter: function(data) {
+                        //服务器端检索完毕后，将会把数据传送到这里，
+                        //开发者可以进一步对数组的展示值进行处理
+                        return data;
+                    }
+
+                });
+            });
+        </script>
+    </body>
+
+</html>

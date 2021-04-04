@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            格式化组合框数据
+        </title>
+        <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../demo.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+    </head>
+    
+    <body>
+        <h1>格式化组合框展示内容</h1>
+       <input id="cc">
+        <script>
+            $(function() {
+                $('#cc').combobox({
+                    //扩展自Combo的属性
+                    width: 400,
+                    panelHeight: 450,
+                    //ComboBox新增属性
+                    valueField: 'id',
+                    textField: 'city',
+                    groupField: 'country',
+                    url: "http://127.0.0.1/easyui/example/c2/server/getCountry.php",
+                    groupFormatter: function(group) {
+                        if (group == "中国") {
+                            return "<img src='http://127.0.0.1/easyui/example/c2/img/zg.png'></img>";
+                        } else if (group == "美国") {
+                            return "<img src='http://127.0.0.1/easyui/example/c2/img/mg.png'></img>";
+                        } else if (group == "英国") {
+                            return "<img src='http://127.0.0.1/easyui/example/c2/img/yg.png'></img>";
+                        } else if (group == "法国") {
+                            return "<img src='http://127.0.0.1/easyui/example/c2/img/fg.png' width='36' height='27'></img>";
+                        } else {
+                            return "";
+                        }
+                    },
+                    formatter: function(row) {
+                        var opts = $(this).combobox("options");
+                        var text = row[opts.textField];
+                        if (text == "北京市" || text == "华盛顿" || text == "伦敦" || text == "巴黎") {
+                            return "<b>" + text + "</b>";
+                        } else {
+                            return text;
+                        }
+                    },
+                });
+
+            });
+        </script>
+    </body>
+
+</html>

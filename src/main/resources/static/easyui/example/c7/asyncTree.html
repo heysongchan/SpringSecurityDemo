@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>异步树</title>
+		<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="../../demo.css">
+		<script type="text/javascript" src="../../jquery.min.js"></script>
+		<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+	</head>
+	<body>
+	<div id='tt-c7'></div>
+	<script>
+		$(function(){
+			$('#tt-c7').tree({
+				url:"http://127.0.0.1/easyui/example/c7/server/getAsyncTree.php",
+				//节点前显示复选框
+				checkbox:true,
+				//显示行线
+				lines:true,
+				loadMsg:"数据正在加载，请稍等",
+			    formatter:function(node){
+					var s=node.text;
+					//格式化产品类型
+					if (s == "1") {
+					  return  "电器";
+					} else if (s == "2") {
+					  return "食品";
+					} else {
+					  return s;
+				 }}
+
+			});
+		})
+	</script>
+	</body>
+</html>
+
+

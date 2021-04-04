@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            购物车
+        </title>
+        <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../demo.css">
+        <script type="text/javascript" src="../../jquery.min.js">
+        </script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js">
+        </script>
+    </head>
+    
+    <body class="easyui-layout">
+        <style>
+            .left { float: left; width: 30%; height: 100%; } .right { float: left;
+            width: 70%; height: 100%; }
+        </style>
+        <div data-options="region:'center',title:'购物车',border:true" style="padding:5px;">
+            <div width="150px" class='left'>
+            	<div><h2>请将商品拖动到购物车</h2></div>
+                <div style="margin:20px" class="element" productname='空调' productprice='3550'>
+                    <image src="http://127.0.0.1/easyui/example/c3/img/air.jpg" width='120px' style="display:inherit">
+                    </image>
+                    <span style="margin:10px">
+                        空调
+                    </span>
+                    <span>
+                        3550元
+                    </span>
+                </div>
+                <div style="margin:20px" class="element" productname='冰箱' productprice='6700'>
+                    <image src="http://127.0.0.1/easyui/example/c3/img/fridge.jpg" width='120px' style="display:inherit">
+                    </image>
+                    <span style="margin:10px">
+                        冰箱
+                    </span>
+                    <span>
+                        6700元
+                    </span>
+                </div>
+                <div style="margin:20px" class="element" productname='电视' productprice='4200'>
+                    <image src="http://127.0.0.1/easyui/example/c3/img/television.png" width='120px' style="display:inherit">
+                    </image>
+                    <span style="margin:10px">
+                        电视
+                    </span>
+                    <span>
+                        4200元
+                    </span>
+                </div>
+                <div style="margin:20px" class="element" productname='烤箱' productprice='5500'>
+                    <image src="http://127.0.0.1/easyui/example/c3/img/Oven.jpg" width='120px' style="display:inherit">
+                    </image>
+                    <span style="margin:10px">
+                        烤箱
+                    </span>
+                    <span>
+                        5500元
+                    </span>
+                </div>
+            </div>
+            <!-- 放置区域 -->
+            <div class="right" style="margin-top:30px">
+            	<div><h2>购物车</h2></div>
+                <table id="dg" height="200px">
+                </table>
+            </div>
+        </div>
+        <script>
+            $(function() {
+                $('.element').draggable({
+                    revert: true,
+                    proxy: 'clone'
+                });
+
+                $("#dg").datagrid({
+                    width: 400,
+                    showFooter: true,
+                    columns: [[{
+                        field: 'name',
+                        title: '产品名称',
+                        width: '40%'
+                    },
+                    {
+                        field: 'price',
+                        title: '价格',
+                        width: '30%'
+                    },
+                    {
+                        field: 'num',
+                        title: '数量',
+                        width: '30%',
+                        align: 'right'
+                    }]]
+                });
+
+                $('.right').droppable({
+                    accept: '.element',
+                    onDrop: function(e, source) {
+                        var name = $(source).attr('productname');
+                        var price = $(source).attr('productprice');
+                        //获取数据网格中的全部数据
+                        var data = $('#dg').datagrid('getData');
+                        //获取数据网格中的全部行数据
+                        var rows = data.rows;
+                        //当前状态，0代表新增产品，1代表更新产品
+                        var state = 0;
+                        //总价
+                        var sum = 0;
+                        //遍历数据网格中的所有行
+                        rows.forEach(function(item, index) {
+                            //假如该产品存在的话则更新数据网格中对应的行
+                            if (item.name == name) {
+                                var num = item.num + 1;
+                                $('#dg').datagrid('updateRow', {
+                                    index: index,
+                                    row: {
+                                        'name': name,
+                                        'price': price,
+                                        'num': num
+                                    }
+                                });
+                                state = 1;
+                                sum += price * num;
+                            } else {
+                                sum += item.price * item.num;
+                            }
+                        });
+                        //假如产品不存在的话则在数据网格中新增该产品
+                        if (state == 0) {
+                            $('#dg').datagrid('appendRow', {
+                                'name': name,
+                                'price': price,
+                                'num': 1
+                            });
+                            sum += price * 1;
+                        }
+                        //底部区域显示产品的总价
+                        $('#dg').datagrid('reloadFooter', [{
+                            name: '总价',
+                            price: sum
+                        },
+                        ]);
+
+                    }
+                });
+            });
+        </script>
+    </body>
+
+</html>

@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 
 #spring:
 #  security:
@@ -9,7 +9,7 @@ server:
 ########### mysql  #######################
 spring:
   datasource:
-    url: jdbc:mysql://192.168.0.107:3306/test?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://192.168.0.108:3306/test?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
     username: root
     password: 123456
 ## mybatis

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            中文格式的日期框
+        </title>
+        <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../demo.css">
+        <script type="text/javascript" src="../../jquery.min.js">
+        </script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js">
+        </script>
+    </head>
+    
+    <body>
+    	<H1>中文格式日期框</H1>
+		<input  id="dd">
+		<script>
+		$(function(){
+			//自定义按钮
+			var buttons = $.extend([], $.fn.datebox.defaults.buttons);
+			buttons.splice(1, 0, {
+				text: '确定',
+				handler: function(target){
+				alert('当前选择的日期是'+$(target).val());
+				}
+			});
+			
+			$("#dd").datebox({
+				width:500,
+				panelWidth:500,
+				currentText:"今天",
+				closeText:"关闭",
+				buttons: buttons,
+				parser: function(s){
+					//使用正则表达式解析用户输入
+					//第一种解析的格式X年X月X日
+					var m1 = /\d年\d月\d日/;
+					//第二种解析的格式X/X/X;
+					var m2 = /\d\/\d\/\d/;
+					//第三种解析格式X.X.X
+					var m3 = /\d\.\d\.\d/;
+					//var t = Date.parse(s);
+					if (m1.test(s)){
+						var tmp1 = s.split("年");
+						var year = tmp1[0];
+						var tmp2 = tmp1[1].split("月");
+						var month= tmp2[0];
+						var tmp3 = tmp2[1].split("日");
+						var day  = tmp3[0]
+						return new Date(year+"/"+month+"/"+day);
+					}else if(m2.test(s)){
+						return new Date(s);
+					} else if(m3.test(s)){
+						return new Date(s);
+					}
+					else {
+						return new Date();
+					}
+				},
+				formatter:function(date){
+					var y = date.getFullYear();
+					var m = date.getMonth()+1;
+					var d = date.getDate();
+					return y+'年'+m+'月'+d+"日";
+				}
+			});
+		});
+
+		</script>
+
+    </body>
+
+</html>

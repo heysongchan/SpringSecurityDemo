@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            更新视图
+        </title>
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../demo.css">
+        <!-- easyui主题 -->
+        <link id="easyuiTheme" rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+    </head>
+
+    <body class="easyui-layout">
+        <script type="text/javascript" src="http://127.0.0.1/easyui/plugins/jquery.cookie.js"></script>
+    
+        <div data-options="region:'east',title:'树形结构数据',split:true" style="width:300px;">
+            <div id="tt-c101">
+            </div>
+        </div>
+        <div data-options="region:'center',title:'数据网格'">
+            <table id="dg-c101">
+            </table>
+            <div style="margin-top:20px">
+            	<input id="cc-c101">
+	            	<a class="easyui-linkbutton" onclick="save()">使用cookie保存</a>
+    	        	<a class="easyui-linkbutton" onclick="destroy()">清除cookie</a>
+            </div>
+        </div>
+
+    <script>
+        //替换本机主题样式
+        var changeTheme = function(themeName, type) {
+            //获取当前主题的外部样式表链接地址
+            var $easyuiTheme = $('#easyuiTheme');
+            var url = $easyuiTheme.attr('href');
+            //将本机的主题地址替换成指定的主题地址
+            if (type == "1") {
+                var href = '../themes/' + themeName + '/easyui.css';
+            } else {
+                var href = '../extends/theme/' + themeName + '/easyui.css';
+            }
+            $easyuiTheme.attr('href', href);
+        };
+    	//当前选择的主题，默认为默认主题
+    	var curTheme = "default";
+    	//当前选择的主题所在分组，默认为内置分组
+	    var curThemeType = "1"
+	
+	    //获取存储的主题名称
+		var themeName = $.cookie("theme");　
+    	//获取主题所在分组
+    	var themeType = $.cookie("themetype");　
+		//使用存储的主题来渲染页面
+		if(themeName){
+			changeTheme(themeName,themeType);
+		}
+		
+        //保存Cookie
+        var save = function(){
+        	$.cookie("theme",curTheme,{ expires: 7 });　
+        	$.cookie("themetype",curThemeType,{ expires: 7 });　
+        	$.messager.show({
+        		title:'主题保存成功',
+        		msg:'主题已保存，刷新页面后可查看效果',
+        		timeout:5000,
+        		showType:'slide'
+        	});
+        }
+        
+        //删除cookie
+        var destroy = function(){
+            $.cookie('theme', '', { expires: -1 }); 
+            $.cookie('themetype', '', { expires: -1 });
+        	$.messager.show({
+        		title:'主题删除成功',
+        		msg:'主题已删除，刷新页面后可查看效果',
+        		timeout:5000,
+        		showType:'slide'
+        	});
+        }
+        
+        $(function() {
+            //西部区域显示树形结构数据
+            $('#tt-c101').tree({
+                url: "http://127.0.0.1/easyui/example/c10/server/getAsyncTree.php",
+                //节点前显示复选框
+                checkbox: true,
+                //显示行线
+                lines: true,
+                loadMsg: "数据正在加载，请稍等",
+                formatter: function(node) {
+                    var s = node.text;
+                    //格式化产品类型
+                    if (s == "1") {
+                        return "电器";
+                    } else if (s == "2") {
+                        return "食品";
+                    } else {
+                        return s;
+                    }
+                }
+            });
+            //中部区域显示数据网格
+            $("#dg-c101").datagrid({
+                rownumbers: true,
+                url: "http://127.0.0.1/easyui/example/c10/server/getpagination.php",
+                columns: [[{
+                    field: 'name',
+                    title: '姓名',
+                    width: '50%'
+                },
+                {
+                    field: 'age',
+                    title: '年龄',
+                    width: '50%'
+                },
+                ]],
+                loadMsg: "数据正在加载，请稍等",
+                pagination: true,
+            });
+
+            $("#cc-c101").combobox({
+                width: 400,
+                label: "请选择主题",
+                labelWidth: 100,
+                panelHeight: 200,
+                valueField: 'id',
+                textField: 'text',
+                groupField: 'type',
+                data: [{
+                    id: '1',
+                    text: 'default',
+                    type: '1'
+                },
+                {
+                    id: '2',
+                    text: 'black',
+                    type: '1'
+                },
+                {
+                    id: '3',
+                    text: 'bootstrap',
+                    type: '1'
+                },
+                {
+                    id: '4',
+                    text: 'gray',
+                    type: '1'
+                },
+                {
+                    id: '5',
+                    text: 'metro',
+                    type: '1'
+                },
+                {
+                    id: '6',
+                    text: 'material',
+                    type: '1'
+                },
+                {
+                    id: '7',
+                    text: 'ui-cupertino',
+                    type: '2'
+                },
+                {
+                    id: '8',
+                    text: 'ui-dark-hive',
+                    type: '2'
+                },
+                {
+                    id: '9',
+                    text: 'ui-pepper-grinder',
+                    type: '2'
+                },
+                {
+                    id: '10',
+                    text: 'ui-sunny',
+                    type: '2'
+                },
+                {
+                    id: '11',
+                    text: 'metro-blue',
+                    type: '2'
+                },
+                {
+                    id: '12',
+                    text: 'metro-gray',
+                    type: '2'
+                },
+                {
+                    id: '13',
+                    text: 'metro-green',
+                    type: '2'
+                },
+                {
+                    id: '14',
+                    text: 'metro-red',
+                    type: '2'
+                },
+                {
+                    id: '15',
+                    text: 'metro-orange',
+                    type: '2'
+                }],
+                groupFormatter: function(group) {
+                    if (group == "1") {
+                        return "内置主题";
+                    } else {
+                        return "扩展主题";
+                    }
+                },
+                onClick: function(record) {
+                	curThemeType = record.type;
+                	curTheme     = record.text;
+                    changeTheme(record.text, record.type)
+                }
+            });
+
+           
+        });
+    </script>
+    </body>
+</html>

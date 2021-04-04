@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>数据网格行编辑</title>
+		<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="../../demo.css">
+		<script type="text/javascript" src="../../jquery.min.js"></script>
+		<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+	</head>
+	<body>
+	<script type="text/javascript" src="http://127.0.0.1/easyui/extends/edatagrid/jquery.edatagrid.js"></script>
+	<div id='dg-c81'></div>
+	<div id="tb-c81">
+		<a href="#" class="easyui-linkbutton" id='add-c81'    data-options="iconCls:'icon-add',plain:true">新增</a>
+		<a href="#" class="easyui-linkbutton" id='save-c81'    data-options="iconCls:'icon-save',plain:true">保存</a>
+		<a href="#" class="easyui-linkbutton" id='cancel-c81'   data-options="iconCls:'icon-undo',plain:true">取消</a>
+		<a href="#" class="easyui-linkbutton" id='delete-c81' data-options="iconCls:'icon-remove',plain:true">删除</a>
+	</div>
+	<script>
+		$(function(){
+			$("#dg-c81").edatagrid({
+				width:600,
+				rownumbers:true,
+				toolbar:"#tb-c81",
+				destroyMsg:{
+					//当没有被选中的行时
+					norecord:{
+						title:'警告',
+						msg:'没有数据被选中'
+					},
+					//显示确认提示
+					confirm:{
+						title:'确认',
+						msg:'你确认要删除该数据吗?'
+					}
+				},
+				url:"http://127.0.0.1/easyui/example/c8/server/retrieveProduct.php",
+				saveUrl:'http://127.0.0.1/easyui/example/c8/server/createProduct.php',
+				updateUrl:"http://127.0.0.1/easyui/example/c8/server/updateProduct.php",
+				destroyUrl:'http://127.0.0.1/easyui/example/c8/server/deleteProduct.php',
+				loadMsg:"数据正在加载，请稍等",
+				columns:[[
+				        //产品名称在编辑模式时使用文本框标记
+						{field:'productname' ,title:'产品名称',width:'10%',editor:"textbox"},
+						//产品类型在编辑模式时使用组合框
+						{field:'producttype',title:'产品类型',width:'10%',formatter:formatProductType,
+							editor:{type:"combobox",options:{
+								valueField:'id',
+								textField:'typename',
+								data:[
+								      {id:1,typename:'电器'},
+								      {id:2,typename:'食品'}
+								]}}
+						},
+						//产品价格在编辑模式时使用数字框
+						{field:'productprice' ,width:'20%',title:'产品价格',editor:
+							{type:"numberbox",options:{
+								required:true,
+								min:0,
+								precision:2,
+								prefix:'$',
+							}}
+						},
+						//产品上架时间在编辑模式时使用日期框
+						{field:'producttime' ,title:'上架时间',width:'30%',formatter:formatProductTime,
+							editor:{type:"datebox",options:{
+								required:true,
+								editable:false,
+								parser: function(s){
+									var t = Date.parse(s);
+									if (!isNaN(t)){										
+										return new Date(t);
+									}else{
+										return new Date();
+									}
+								},
+								formatter:function(date){
+									var y = date.getFullYear();
+									var m = date.getMonth()+1;
+									var d = date.getDate();
+									return y+'/'+m+'/'+d+'/';
+								},
+								currentText:"今天",
+								closeText:"关闭",
+							}}
+						},
+						//产品产地在编辑模式时使用组合框
+						{field:'productaddress' ,title:'产地',width:'20%',formatter:formatProductAddress,
+							editor:{type:"combobox",options:{
+								required:true,
+								valueField:'id',
+								textField:'city',
+								data:[
+								      {id:1,city:'北京'},
+								      {id:2,city:'上海'},
+								      {id:3,city:'南京'}
+								]}}
+						},
+						//产品类型在编辑模式时使用数字微调器
+						{field:'productvolume' ,title:'销售量',width:'10%',editor:
+							{type:"numberspinner",options:{
+								required:true,
+								min:0,
+							}}
+						},
+				]],			
+
+			});
+			
+			//格式化上架时间
+			function formatProductTime(value,row,index){
+				var date=new Date(Date.parse(value));
+				var Year=date.getFullYear();
+				var Month=date.getMonth()+1;
+				var Day=date.getDate();
+				return  Year+"年"+Month+"月"+Day+"日";				
+			}
+			//格式化产地
+			function formatProductAddress(value,row,index){
+				switch(value){
+					case "1":
+						return  "北京";
+					case "2":
+						return "上海";
+					case "3":
+						return  "南京";
+					default:
+						return value;
+				}
+			}
+			//格式化产品类型
+			function formatProductType(value,row,index){
+				if(value == "1"){
+					return "电器";
+				}else if(value == "2"){
+					return "食品";
+				}else{
+					return value;
+				}
+			}
+			
+			$("#add-c81").click(function(){
+				$("#dg-c81").edatagrid("addRow");
+			});
+
+			$("#save-c81").click(function(){
+				$("#dg-c81").edatagrid("saveRow");
+			});
+			
+			$("#cancel-c81").click(function(){
+				$("#dg-c81").edatagrid("cancelRow");
+			});
+			
+			$("#delete-c81").click(function(){
+				$("#dg-c81").edatagrid("destroyRow");
+			});
+			
+		})
+	</script>
+	</body>
+</html>
+
+

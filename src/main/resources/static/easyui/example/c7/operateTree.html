@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            动态操作树
+        </title>
+        <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../demo.css">
+        <script type="text/javascript" src="../../jquery.min.js">
+        </script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js">
+        </script>
+    </head>
+    
+    <body>
+        <div id='tt-c71'>
+        </div>
+        <div id="mm" class="easyui-menu" style="width:120px;">
+            <div onclick="append()" data-options="iconCls:'icon-add'">
+                添加
+            </div>
+            <div onclick="removeit()" data-options="iconCls:'icon-remove'">
+                删除
+            </div>
+            <div class="menu-sep">
+            </div>
+            <div onclick="expand()">
+                展开
+            </div>
+            <div onclick="collapse()">
+                折叠
+            </div>
+        </div>
+      <script>
+    /*添加节点的方法
+	该方法会在指定的节点下创建一个子节点
+	*/
+    function append() {
+        //获取当前选中的节点对象
+        var t = $('#tt-c71');
+        var node = t.tree('getSelected');
+        /*新增一个节点的方法
+		本例中设置用户右击的节点为父节点，并在该节点下创建新节点
+		*/
+        t.tree('append', {
+            parent: (node ? node.target: null),
+            data: [{
+                text: 'newitem1'
+            }]
+        });
+    }
+    //删除节点的方法，该方法会删除选中的节点
+    function removeit() {
+        var node = $('#tt-c71').tree('getSelected');
+        $('#tt-c71').tree('remove', node.target);
+    }
+    //折叠节点
+    function collapse() {
+        var node = $('#tt-c71').tree('getSelected');
+        $('#tt-c71').tree('collapse', node.target);
+    }
+    //展开节点
+    function expand() {
+        var node = $('#tt-c71').tree('getSelected');
+        $('#tt-c71').tree('expand', node.target);
+    }
+    $(function() {
+        $('#tt-c71').tree({
+            url: "http://127.0.0.1/easyui/example/c7/server/getAsyncTree.php",
+            //节点前显示复选框
+            checkbox: true,
+            //显示行线
+            lines: true,
+            loadMsg: "数据正在加载，请稍等",
+            /*
+				右击节点时触发
+				e:事件对象
+				node:右击的节点对象
+			*/
+            onContextMenu: function(e, node) {
+                //阻止默认事件
+                e.preventDefault();
+                //选中右击的节点
+                $(this).tree('select', node.target);
+                //显示菜单
+                $('#mm').menu('show', {
+                    left: e.pageX,
+                    //点击节点时鼠标在X轴方向的位置
+                    top: e.pageY
+                    //点击节点时鼠标在Y轴方向的位置
+                });
+            },
+            onClick: function(node) { //单击节点时触发
+                //开启编辑模式
+                $(this).tree('beginEdit', node.target);
+            },
+          //格式化节点，在所有父节点后显示子节点的数量
+       		formatter:function(node){
+       			var s=node.text;
+       		  //格式化产品类型
+                if (s == "1") {
+                     return  "电器";
+                } else if (s == "2") {
+                   return "食品";
+                } else {
+                	return s;
+                }
+            }
+        });
+    })
+</script>
+</body>
+</html>

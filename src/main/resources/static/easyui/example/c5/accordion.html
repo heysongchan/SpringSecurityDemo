@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>折叠面板</title>
+        <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../demo.css">
+        <script type="text/javascript" src="../../jquery.min.js">
+        </script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js">
+        </script>
+	</head>
+	<body>
+	    <div id="aa">
+			<div title="Title1"></div>
+			<div title="Title2"></div>
+			<div title="Title3"></div>
+		</div>
+	<script>
+		$(function(){
+			$("#aa").accordion({
+				width:"300",
+				height:"200",
+			});
+			//panels方法可以获取折叠面板内的全部面板元素，它是一个数组
+			$panels = $("#aa").accordion("panels");
+			//$panels[0]代表折叠面板内的第一个面板元素，可以使用面板的属性对其初始化
+			$panels[0].panel({
+				loadingMessage:"加载中",
+				href:"#",
+				extractor: function(data){				
+						return data;
+				},
+				loader:function(param,success,error){
+					 $.ajax({
+							url:"http://127.0.0.1/easyui/example/c5/server/getData.php",
+							data:{"index":0},
+							type:"get",
+							success: function(data){
+								success(data);
+							},
+							error:function(data){
+								error();
+							}
+						});
+				}});
+			//通过getPanel方法获取折叠面板内的第二个面板元素对象，这里使用面板的索引搜索
+			$panel_2 = $("#aa").accordion("getPanel",1);
+			$panel_2.panel({
+				loadingMessage:"加载中",
+				href:"#",
+				extractor: function(data){				
+						return data;
+				},
+				loader:function(param,success,error){
+					 $.ajax({
+							url:"http://127.0.0.1/easyui/example/c5/server/getData.php",
+							data:{"index":1},
+							type:"get",
+							success: function(data){
+								success(data);
+							},
+							error:function(data){
+								error();
+							}
+						});
+				}});
+			//通过getPanel方法获取折叠面板中第三个面板对象，这里使用面板的标题搜索
+			$panel_3 = $("#aa").accordion("getPanel","Title3");
+			$panel_3.panel({
+				loadingMessage:"加载中",
+				href:"#",
+				extractor: function(data){				
+						return data;
+				},
+				loader:function(param,success,error){
+					 $.ajax({
+							url:"http://127.0.0.1/easyui/example/c5/server/getData.php",
+							data:{"index":2},
+							type:"get",
+							success: function(data){
+								success(data);
+							},
+							error:function(data){
+								error();
+							}
+						});
+				}});
+
+		});
+	</script>
+	</body>
+</html>
+
+

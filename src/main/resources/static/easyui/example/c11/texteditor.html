@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>TextEditor - jQuery EasyUI</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../demo.css">
+    <script type="text/javascript" src="../../jquery.min.js"></script>
+    <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+<link rel="stylesheet" type="text/css" href="http://127.0.0.1/easyui/extends/jquery-easyui-texteditor/texteditor.css">
+<script type="text/javascript" src="http://127.0.0.1/easyui/extends/jquery-easyui-texteditor/jquery.texteditor.js"></script>
+<h1>文本编辑器</h1>
+	<div  id="et" style="width:740px;height:300px;padding:20px"></div>
+	<a class="easyui-linkbutton" id='gc'>获取编辑内容</a>
+</div>
+<script>
+$(function(){
+	$("#et").texteditor();
+	$("#gc").click(function(){
+		alert($("#et").texteditor("getValue"));
+	});
+});
+</script>
+</body>
+</html>

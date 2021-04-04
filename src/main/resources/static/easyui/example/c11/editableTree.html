@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            可编辑的树
+        </title>
+        <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../demo.css">
+        <script type="text/javascript" src="../../jquery.min.js">
+        </script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js">
+        </script>
+
+    </head>
+    
+    <body>
+        <script type="text/javascript" src="http://127.0.0.1/easyui/extends/etree/jquery.etree.js"></script>
+        <table id="tg-etree">
+        </table>
+        <div id="mm" class="easyui-menu" style="width:120px;">
+            <div onclick="append()" data-options="iconCls:'icon-add'">
+                添加
+            </div>
+            <div onclick="removeit()" data-options="iconCls:'icon-remove'">
+                删除
+            </div>
+            <div class="menu-sep">
+            </div>
+            <div onclick="expand()">
+                展开
+            </div>
+            <div onclick="collapse()">
+                折叠
+            </div>
+        </div>
+        <script>
+            /*新增节点的方法
+				该方法会在指定的父节点下创建一个子节点
+			*/
+            function append() {
+                //获取当前选中的节点对象
+                var t = $('#tg-etree');
+                var node = t.etree('getSelected');
+                //先判断选择的节点是否为一个叶节点，如果不是叶节点的话则可以在其下创建新的节点
+                if(!t.etree('isLeaf', node.target)){
+                	t.etree('create');
+                }else{
+                	$.messager.show({
+                		title:'警告',
+                		msg:'请勿在叶节点下创建新的节点',
+                		timeout:5000,
+                		showType:'slide'
+                	});
+                }                
+            }
+            
+            //删除节点的方法，该方法会删除选中的节点
+            function removeit() {
+                var node = $('#tg-etree').etree('getSelected');
+                $('#tg-etree').etree('destroy', node);                   
+            }
+            //折叠节点
+            function collapse() {
+                var node = $('#tg-etree').etree('getSelected');
+                $('#tg-etree').etree('collapse', node.target);
+            }
+            //展开节点
+            function expand() {
+                var node = $('#tg-etree').etree('getSelected');
+                $('#tg-etree').etree('expand', node.target);
+            }
+            $(function() {
+            	//汉化提示文字
+                $.extend($.fn.etree.defaults, {
+                    editMsg: {
+                        norecord: {
+                            title: '警告',
+                            msg: '请先选择节点后再进行修改操作。'
+                        }
+                    },
+                    destroyMsg: {
+                        norecord: {
+                            title: '警告',
+                            msg: '请先选择节点后再进行删除操作。'
+                        },
+                        confirm: {
+                            title: '确认',
+                            msg: '是否真的删除选定的节点？'
+                        }
+                    }
+
+                });
+                $('#tg-etree').etree({
+                    url: 'http://127.0.0.1/easyui/example/c11/server/getData.php',
+                    createUrl: "http://127.0.0.1/easyui/example/c11/server/createData.php",
+                    updateUrl: "http://127.0.0.1/easyui/example/c11/server/updateData.php",
+                    destroyUrl: "http://127.0.0.1/easyui/example/c11/server/destroyData.php",
+                    //显示行线
+                    lines: true,
+                    loadMsg: "数据正在加载，请稍等",
+                    /*
+					右击节点时触发
+					e:事件对象
+					node:右击的节点对象
+					*/
+                    onContextMenu: function(e, node) {
+                        //阻止默认事件
+                        e.preventDefault();
+                        //选中右击的节点
+                        $(this).tree('select', node.target);
+                        //显示菜单
+                        $('#mm').menu('show', {
+                            left: e.pageX,
+                            //点击节点时鼠标在X轴方向的位置
+                            top: e.pageY
+                            //点击节点时鼠标在Y轴方向的位置
+                        });
+                    },
+                    formatter: function(node) {
+                        var s = node.text;
+                        //格式化产品类型
+                        if (s == "1") {
+                            return "电器";
+                        } else if (s == "2") {
+                            return "食品";
+                        } else {
+                            return s;
+                        }
+                    }
+                });
+            });
+        </script>
+    </body>
+
+</html>

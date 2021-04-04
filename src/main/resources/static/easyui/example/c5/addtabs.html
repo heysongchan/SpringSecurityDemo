@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>选项卡</title>
+        <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../demo.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+	</head>
+	<body class="easyui-layout">	
+		<div id="c5-tt" class="easyui-tabs" style="width:800px;height:250px;" data-options="tabWidth:300">
+			<div title="主页" style="padding:20px;display:none;">
+				主页
+			 </div>
+		</div>
+		<a id="btn1" class='addpage' href="#" url='http://127.0.0.1/easyui/example/c5/file/page1.html' title='添加页面1'>添加页面1</a>
+		<a id="btn2" class='addpage' href="#" url='http://127.0.0.1/easyui/example/c5/file/page2.html' title='添加页面2'>添加页面2</a>
+		<a id="btn3" class='addpage' href="#" url='http://127.0.0.1/easyui/example/c5/file/page3.html' title='添加页面3'>添加页面3</a>
+
+	<script>
+		$(function(){
+			$('.addpage').linkbutton();
+
+			$('.addpage').click(function(){
+				var $p = $(this);
+				var title = $p.attr('title');
+				//检查标签是否已被加载
+				var which = $('#c5-tt').tabs('getTab',title);
+				//which指的是标签对象，返回null代表该标签不存在
+				if(which){
+					//如果该标签存在的话就在选项卡中选中它
+					$('#c5-tt').tabs('select',title);
+				}
+				else{
+					//动态添加标签
+					$('#c5-tt').tabs('add',{
+						//设置标签标题
+						title:title,
+						//为标签添加一个可关闭的按钮
+						closable:true,
+						//远程加载标签内容
+						href:$p.attr('url'),
+						//对加载后的数据进行过滤，进保留<body>标签内的内容
+						extractor: function(data){
+							var pattern = /<body[^>]*>((.|[\n\r])*)<\/body>/im;
+							var matches = pattern.exec(data);
+							if (matches){
+								return matches[1];
+							} else {
+								return data;
+							}
+						}
+					});
+				}
+		});
+	});
+	</script>
+		</body>
+</html>
+

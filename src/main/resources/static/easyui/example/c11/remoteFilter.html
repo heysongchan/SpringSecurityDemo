@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>数据网格行</title>
+		<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="../../demo.css">
+		<script type="text/javascript" src="../../jquery.min.js"></script>
+		<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+	</head>
+	<body>
+	<script type="text/javascript" src="http://127.0.0.1/easyui/extends/datagrid-filter/datagrid-filter.js"></script>		
+	<div id='dg-remote-filter'></div>
+	<script>
+    $(function(){
+    	$("#dg-remote-filter").datagrid({
+			width:500,
+			rownumbers:true,
+			url:"http://127.0.0.1/easyui/example/c11/server/getRemoteFilterData.php",
+			columns:[[
+				{field:'name',title:'姓名',width:'50%'},
+				{field:'age' ,title:'年龄',width:'50%'},
+			]],
+			remoteFilter:true,//开启服务器过滤
+			//将过滤规则通过'filterRules'参数传输给服务器
+			//注意其为JSON格式，例如[{"field":"age","op":"endwith","value":"5"}]
+    		//服务器需要将JSON格式转化成数组
+			filterStringify:function(data){
+				return JSON.stringify(data);
+			},
+			loadMsg:"数据正在加载，请稍等",
+			pagination:true,
+		}).datagrid("enableFilter", [  
+			{
+			   field:'name',
+			   type:'textbox',
+			   op:['equal','notequal','beginwith','endwith']
+			},{
+			  field:'age',
+			  type:'textbox',
+			  op:['contains','equal','notequal','beginwith','endwith','less','greater','lessorequal','greaterorequal']
+			}]);
+		});
+	</script>
+	</body>
+</html>
+

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            详细内容视图
+        </title>
+        <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../demo.css">
+        <script type="text/javascript" src="../../jquery.min.js">
+        </script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js">
+        </script>
+    </head>
+    
+    <body>
+        <style>
+            .detail{ float:left, border-top-width: 50px; padding-top: 10px; padding-left:
+            56px; }
+        </style>
+        <script type="text/javascript" src="http://127.0.0.1/easyui/extends/view/datagrid-detailview.js">
+        </script>
+        <table id="dg-detailview">
+        </table>
+        <script>
+            $(function() {
+                $('#dg-detailview').datagrid({
+                    width: 600,
+                    columns: [[{
+                        field: 'productname',
+                        title: '产品名称',
+                        width: '25%'
+                    },
+                    {
+                        field: 'producttype',
+                        title: '产品类型',
+                        align: 'center',
+                        width: '15%'
+                    },
+                    {
+                        field: 'productprice',
+                        title: '产品价格',
+                        align: 'center',
+                        width: '25%'
+                    },
+                    {
+                        field: 'productvolume',
+                        title: '销售量',
+                        align: 'center',
+                        width: '25%'
+                    }]],
+                    view: detailview,
+                    data: [{
+                        productname: "空调",
+                        producttype: "电器",
+                        productprice: "5000",
+                        productvolume: "30",
+                        productaddress: '南京',
+                        producttime: "2017年7月8日",
+                        img: 'http://127.0.0.1/easyui/example/c11/img/air.jpg'
+                    },
+                    {
+                        productname: "冰箱",
+                        producttype: "电器",
+                        productprice: "7900",
+                        productvolume: "21",
+                        productaddress: '南京',
+                        producttime: "2017年9月11日",
+                        img: 'http://127.0.0.1/easyui/example/c11/img/fridge.jpg'
+                    },
+                    {
+                        productname: "瓜子",
+                        producttype: "零食",
+                        productprice: "3",
+                        productvolume: "341",
+                        productaddress: '上海',
+                        producttime: "2017年2月27日",
+                        img: 'http://127.0.0.1/easyui/example/c11/img/guazi.jpg'
+                    },
+                    {
+                        productname: "薯片",
+                        producttype: "零食",
+                        productprice: "7",
+                        productvolume: "897",
+                        productaddress: '北京',
+                        producttime: "2017年2月27日",
+                        img: 'http://127.0.0.1/easyui/example/c11/img/shupian.jpg'
+                    },
+                    {
+                        productname: "烤箱",
+                        producttype: "电器",
+                        productprice: "3500",
+                        productvolume: "12",
+                        productaddress: '北京',
+                        producttime: "2017年6月7日",
+                        img: 'http://127.0.0.1/easyui/example/c11/img/Oven.jpg'
+                    },
+                    {
+                        productname: "电视",
+                        producttype: "电器",
+                        productprice: "4600",
+                        productvolume: "67",
+                        productaddress: '上海',
+                        producttime: "2017年9月17日",
+                        img: 'http://127.0.0.1/easyui/example/c11/img/television.png'
+                    },
+                    ],
+                    detailFormatter: function(index, row) {
+                        return "<img style='float:left' src='" + row.img + "' height='60px' width='40px'>" + "<div class='detail'>产地：" + row.productaddress + "</div>" + "<div class='detail'>生产日期：" + row.producttime + "</div>";
+                    }
+                });
+
+            });
+        </script>
+    </body>
+
+</html>

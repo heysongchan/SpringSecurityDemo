@@ -21,8 +21,9 @@ public class MyFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		log.info("MyFilter  " + request.getRequestURI());
+		log.info("MyFilter  " + request.getRequestURL());
 		filterChain.doFilter(request, response);
-
+		// response.sendRedirect("http://localhost:8080/gateway" +
+		// request.getRequestURI());
 	}
 }

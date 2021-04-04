@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>数据网格行</title>
+		<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="../../demo.css">
+		<script type="text/javascript" src="../../jquery.min.js"></script>
+		<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+	</head>
+	<body>
+	<div id='tg'></div>
+	<div id="mm" class="easyui-menu" style="width:120px;">
+            <div onclick="append()" data-options="iconCls:'icon-add'">
+                添加
+            </div>
+            <div onclick="removeit()" data-options="iconCls:'icon-remove'">
+                删除
+            </div>
+            <div class="menu-sep">
+            </div>
+            <div onclick="expand()">
+                展开
+            </div>
+            <div onclick="collapse()">
+                折叠
+            </div>
+      </div>
+	<script>
+	//定义新增节点时节点的id，为确保不重复，每次新增一个节点后该值会自增1
+	var appendid =100;
+	//获取当前日期用于新增节点时初始化编辑器的值
+	var date=new Date();
+	var Year=date.getFullYear();
+	var Month=date.getMonth()+1;
+	var Day=date.getDate();
+	var cur =   Year+"/"+Month+"/"+Day+"/";	
+	/*
+	添加节点的方法
+	该方法会在指定的节点下创建一个子节点
+	*/
+    function append() {
+        //获取当前选中的节点对象
+        var t = $('#tg');
+        var node = t.treegrid('getSelected');
+        /*
+        	新增一个节点的方法
+			本例中设置用户右击的节点为父节点，并在该节点下创建新节点
+		*/
+        t.treegrid('append', {
+            parent: node.id,
+            data: [{
+                "productname":'新增产品'+appendid,
+                'productprice':"请输入产品价格",
+            	"id":appendid++,
+                'producttime' :cur,
+                'productaddress':'',
+                "productvolume":''   
+            }]
+        });
+    }
+    //删除节点的方法，该方法会删除选中的节点
+    function removeit() {
+        var node = $('#tg').treegrid('getSelected');
+        $('#tg').treegrid('remove', node.id);
+    }
+    //折叠节点
+    function collapse() {
+        var node = $('#tg').treegrid('getSelected');
+        $('#tg').treegrid('collapse', node.id);
+    }
+    //展开节点
+    function expand() {
+        var node = $('#tg').treegrid('getSelected');
+        $('#tg').treegrid('expand', node.id);
+    }
+	
+    $(function(){
+			/*
+				为树形网格新增单元格编辑方法
+				它的参数为一个包含下列属性的对象
+				1、index可被编辑的节点id
+				2、field可被编辑的列的索引
+				指定的行加指定的列即使一个指定的单元格
+			*/
+			$.extend($.fn.treegrid.methods,{
+				editCell:function(jq,param){
+					return jq.each(function(){
+						//获取树形网格的选项对象
+						var opts=$(this).treegrid('options');
+						//获取树形网格中冻结的列以及未冻结的列并将它们合并到一个数组中
+						var fields=$(this).treegrid('getColumnFields',true)
+							.concat($(this)
+							.treegrid('getColumnFields'));
+						//遍历全部的列
+						for(var i=0;i<fields.length;i++){
+							//获取指定列的选项对象
+							var col=$(this).treegrid('getColumnOption',fields[i]);
+							/*
+								在列的选项对象中新增一个editor1属性，该属性保存该列的编辑器对象。
+								树形网格在开启某行的编辑模式时，会将该行的单元格转化成editor中
+								指定的组件。我们将editor的值临时保存到editor1中，然后设置其值为空，
+								此时该单元格就不会被编辑。注意：一行是由多个单元格组成的，单元格
+								编辑方法的思路就使一行中指定的单元格可被编辑，而其它单元格不可被编辑
+							*/
+							col.editor1=col.editor;
+							/*
+								如果列未被指定可编辑时，则设置其编辑器为空
+								该方法可以确保对某行开启编辑模式时，只有指定的单元格可被编辑
+							*/
+							if(fields[i]!=param.field){
+								col.editor=null;
+							}
+						}
+						//对指定的行开启编辑模式
+						$(this).treegrid('beginEdit',param.index);
+						//将列的编辑器恢复到初始状态
+						for(var i=0;i<fields.length;i++){
+							var col=$(this).treegrid('getColumnOption',fields[i]);
+							col.editor=col.editor1;
+						}			
+					});
+				}
+			});
+			//定义当前是否有单元格被编辑
+			var editIndex=false;
+
+			$("#tg").treegrid({
+				width:800,
+				rownumbers:true,
+				url:"http://127.0.0.1/easyui/example/c7/server/getTreeGrid.php",
+				idField:'id',
+				treeField:'productname',
+				showFooter:true,
+				loadMsg:"数据正在加载，请稍等",
+				/*
+				右击节点时触发
+				e:事件对象
+				node:右击的节点对象
+				 */
+				onContextMenu : function(e, row) {
+					//阻止默认事件
+					e.preventDefault();
+					//选中右击的节点
+					$(this).treegrid('select', row['id']);
+					//显示菜单
+					$('#mm').menu('show', {
+						left : e.pageX,//点击节点时鼠标在X轴方向的位置
+						top : e.pageY
+					//点击节点时鼠标在Y轴方向的位置
+					});
+				},
+				//将产品的名称冻结在网格左侧
+				frozenColumns:[[		
+					{field:'productname' ,title:'产品名称',width:'30%',editor:"textbox"}
+				]],
+				columns:[[	       
+					//产品价格在编辑模式时使用数字框
+					{field:'productprice' ,width:'20%',title:'产品价格',editor:
+						{type:"numberbox",options:{
+							required:true,
+							min:0,
+							precision:2,
+							prefix:'$',
+						}}
+					},
+					//产品上架时间在编辑模式时使用日期框
+					{field:'producttime' ,title:'上架时间',width:'30%',formatter:formatProductTime,
+						editor:{type:"datebox",options:{
+							required:true,
+							editable:false,
+							parser: function(s){
+								var t = Date.parse(s);
+								if (!isNaN(t)){										
+									return new Date(t);
+								}else{
+									return new Date();
+								}
+							},
+							formatter:function(date){
+								var y = date.getFullYear();
+								var m = date.getMonth()+1;
+								var d = date.getDate();
+								return y+'/'+m+'/'+d+'/';
+							},
+							currentText:"今天",
+							closeText:"关闭",
+					}}
+				},
+				//产品产地在编辑模式时使用组合框
+				{field:'productaddress' ,title:'产地',width:'20%',formatter:formatProductAddress,
+				editor:{type:"combobox",options:{
+					required:true,
+					valueField:'id',
+					textField:'city',
+					data:[
+		      			{id:1,city:'北京'},
+		      			{id:2,city:'上海'},
+		      			{id:3,city:'南京'}
+					]}}
+				},
+				//产品类型在编辑模式时使用数字微调器
+				{field:'productvolume' ,title:'销售量',width:'10%',editor:
+					{type:"numberspinner",options:{
+						required:true,
+						min:0,
+					}}
+				},
+				]],			
+				//双击单元格事件row为节点的数据对象，field为选中的单元格字段
+				onDblClickCell:function(field,row){
+					//获取节点的id
+					var id = row['id'];
+					//检查当前单元格是否在编辑模式下
+					//如果在编辑模式下时将会结束编辑
+					if(editIndex){
+						//取消该行选中并结束编辑
+						$(this).treegrid('unselect',id).treegrid("endEdit",id);
+					}else{
+						//如果该单元格不在编辑模式时，选中该节点并开启编辑模式
+						$(this).treegrid('select',id)
+						//开启单元格编辑模式
+						.treegrid("editCell",{
+							index:id,
+							field:field
+						});
+					}				
+				},
+				//开始编辑前先标记该行已被编辑
+				onBeforeEdit:function(row){
+					editIndex=true;
+				},
+				//编辑完毕时标记该行未被编辑
+				onAfterEdit:function(row,changes){
+					editIndex=false;
+				},
+				//取消编辑时标记该行未被编辑
+				onCancelEdit:function(row){
+					editIndex=false;
+				}
+			});
+			
+			//格式化上架时间
+			function formatProductTime(value,row,index){
+				if(value == undefined){
+					return '';
+				}else{
+					var date=new Date(Date.parse(value));
+					var Year=date.getFullYear();
+					var Month=date.getMonth()+1;
+					var Day=date.getDate();
+					return  Year+"年"+Month+"月"+Day+"日";						
+				}
+			
+			}
+			//格式化产地
+			function formatProductAddress(value,row,index){
+				switch(value){
+					case "1":
+						return  "北京";
+					case "2":
+						return "上海";
+					case "3":
+						return  "南京";
+					default:
+						return value;
+				}
+			}
+		})
+	</script>
+	</body>
+</html>
+

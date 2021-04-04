@@ -19,6 +19,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -45,8 +47,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 		super.configure(web);
 	}
 
+//	@Autowired
+//	private MyLoginUrlAuthenticationEntryPoint ep;
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		// http.exceptionHandling().authenticationEntryPoint(ep);
 		http.addFilterBefore(new MyFilter(), UsernamePasswordAuthenticationFilter.class);
 		http.authorizeRequests() //
 				.antMatchers("/aa/**").hasAuthority("a")//
@@ -59,10 +65,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 				.anyRequest().authenticated()//
 				.and()//
 				.formLogin()//
-				.loginPage("/login.html")//
-				.permitAll()//
 				.loginProcessingUrl("/login")// 这里设置from中的action的值 这个url和html中form的action要一致
-//				.successHandler(this)//
+				// .failureUrl("http://localhost:8080/gateway/login.html")//
+				.loginPage("http://localhost:8080/gateway/login.html")//
+//				.successForwardUrl("http://localhost:8080/gateway/admin/getUser")//
+//				.failureForwardUrl("http://localhost:8080/gateway/login.html")//
+
+				.permitAll()//
+
+				.successHandler(this)//
 //				.failureHandler(this)//
 				.and()//
 				.sessionManagement().sessionFixation().migrateSession()//
@@ -71,7 +82,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 				.rememberMe().userDetailsService(userDetailsService)//
 				.and()//
 				.csrf().disable()//
-				.logout().logoutUrl("/logout");
+				.logout()//
+				// .logoutSuccessUrl("http://localhost:8080/gateway/login.html")//
+				.logoutUrl("/logout");
 
 	}
 
@@ -88,7 +101,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
 		log.info("failure    " + request.getRequestURI());
-		response.sendRedirect("/login.html");
+		response.sendRedirect("http://localhost:8080/gateway/login.html");
 	}
 
 	@Override
@@ -100,6 +113,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 			log.info("authority  " + authority);
 		}
 		log.info("success  " + request.getRequestURI());
+		response.sendRedirect("http://localhost:8080/gateway/index.html");
 //		ServletOutputStream out = response.getOutputStream();
 //		Object un = authentication.getPrincipal();
 //		com.example.securityDemo.mysql.User u = (com.example.securityDemo.mysql.User) un;
@@ -110,6 +124,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 	@Bean
 	public HttpSessionEventPublisher httpSessionEventPublisher() {
 		return new HttpSessionEventPublisher();
+	}
+
+	@Bean
+	PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 
 	@Bean("aa")
@@ -128,5 +147,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 //		User uu = new User();
 //		uu.setUsername("aaaaaaaaaaaaaa");
 //		return uu;
-//	}
+//	}	
 }

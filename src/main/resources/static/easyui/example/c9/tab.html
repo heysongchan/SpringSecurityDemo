@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html>
+ <head> 
+  <meta charset="UTF-8" /> 
+  <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /> 
+  <title>选项卡</title> 
+  <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css" /> 
+  <link rel="stylesheet" type="text/css" href="../../demo.css" /> 
+  <script type="text/javascript" src="../../jquery.min.js"></script> 
+  <script type="text/javascript" src="../../jquery.easyui.min.js"></script> 
+<link rel="stylesheet" type="text/css" href="http://127.0.0.1/easyui/themes/mobile.css">
+<script type="text/javascript" src="http://127.0.0.1/easyui/jquery.easyui.mobile.js"></script>
+ </head>  
+ <body> 
+   <style>
+       .tt-inner{
+            display:inline-block;
+            line-height:12px;
+            padding-top:5px;
+        }
+        p{
+            line-height:150%;
+        }
+    </style>
+
+  <div class="easyui-navpanel"> 
+   <header> 
+    <div class="m-toolbar"> 
+     <div class="m-title">
+      选项卡
+     </div> 
+    </div> 
+   </header> 
+   <div class="easyui-tabs" data-options="tabHeight:60,fit:true,tabPosition:'bottom',border:false,pill:true,narrow:true,justified:true"> 
+    <div style="padding:10px"> 
+     <div class="panel-header tt-inner"> 
+      <img src="http://127.0.0.1/easyui/example/c9/img/text_edit.png" width="32px" height="32px" />
+      <br />文本 
+     </div> 
+     <p>文本</p> 
+    </div> 
+    <div style="padding:10px"> 
+     <div class="panel-header tt-inner"> 
+      <img src="http://127.0.0.1/easyui/example/c9/img/gallery.png" width="32px" height="32px" />
+      <br />图片 
+     </div> 
+     <p>图片</p> 
+    </div> 
+    <div style="padding:10px"> 
+     <div class="panel-header tt-inner"> 
+      <img src="http://127.0.0.1/easyui/example/c9/img/videoplayer.png" width="32px" height="32px" />
+      <br />视频 
+     </div> 
+     <p>视频</p> 
+    </div> 
+   </div> 
+  </div>   
+ </body>
+</html>

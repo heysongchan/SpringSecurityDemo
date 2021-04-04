@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>服务器端分页</title>
+		<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="../../demo.css">
+		<script type="text/javascript" src="../../jquery.min.js"></script>
+		<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+	</head>
+	<body>
+	<div id='dg-page'></div>
+	<script>
+		$(function(){
+			$("#dg-page").datagrid({
+				width:500,
+				rownumbers:true,
+				url:"http://127.0.0.1/easyui/example/c7/server/getpagination.php",
+				columns:[[
+					{field:'name',title:'姓名',width:'50%'},
+					{field:'age' ,title:'年龄',width:'50%'},
+				]],
+				loadMsg:"数据正在加载，请稍等",
+				pagination:true,
+			});
+		});
+	</script>
+	</body>
+</html>
+

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            创建起止日期框
+        </title>
+        <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../demo.css">
+        <script type="text/javascript" src="../../jquery.min.js">
+        </script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js">
+        </script>
+    </head>
+    
+    <body>
+        <style>
+            .panelcontent{ padding:10px 5px 15px 20px; }
+        </style>
+        <input id="cc">
+        <div id="se-footer">
+            <div id="footer-button" style="float:right;margin-right:20px">
+                <a id='se-qk' href='#' class='se-footerbutton'>
+                    清空
+                </a>
+                <a id='se-qd' href='#' class='se-footerbutton'>
+                    确定
+                </a>
+            </div>
+        </div>
+        <input id="v_start" type='hidden'>
+        <input id="v_end" type='hidden'>
+        <!--在html中添加一个存放日历控件的div-->
+        <div id="sc">
+        </div>
+        <script>
+            $(function() {
+                //初始化组合组件=====================================================
+                $('#cc').combo({
+                    label: "请选择起止日期",
+                    labelWidth: 100,
+                    //组件宽度
+                    width: 350,
+                    //面板宽度
+                    panelWidth: 250,
+                    //设置文本框不可编辑
+                    editable: false,
+                    //去除文本框右侧下拉图标
+                    hasDownArrow: false,
+                    //自定义的验证规则
+                    validType: 'validateSE'
+                });
+
+                //返回面板对象
+                $p = $('#cc').combo("panel");
+                //获取面板的主体区域对象
+                $body = $p.panel("body");
+                //开始时间日期框
+                var start_databox = "<div><input id='se-start' class='se-date'></div>";
+                //结束时间日期框
+                var end_databox = "<div style='margin-top:20px;margin-bottom:10px'><input id='se-end' class='se-date'></div>";
+                //链接按钮
+                var tool = "<div style='margin-top:20px'>" + "<a id='se-past'    href='#' class='se-toolbutton'>过去</a>" + "<a id='se-week'    href='#' class='se-toolbutton'>一周</a>" + "<a id='se-month'   href='#' class='se-toolbutton'>一月</a>" + "<a id='se-quarter' href='#' class='se-toolbutton'>一季</a>" + "<a id='se-year'    href='#' class='se-toolbutton'>一年</a>" + "</div>";
+                //分割线
+                var split = "<hr style='border:none;border-top:1px solid #95B8E7;'/>";
+                //将这些内容加入到面板主体区域中
+                $body.append(start_databox);
+                $body.append(end_databox);
+                $body.append(split);
+                $body.append(tool);
+
+                //初始化链接按钮属性
+                $(".se-toolbutton").linkbutton({
+                    width: 42,
+                    height: 30,
+                    group: "tool-btn",
+                    toggle: true
+                });
+
+                //初始化日历框属性
+                $("#sc").calendar({
+                    firstDay: "1",
+                    //设置星期一为每周的第一天
+                    //汉化
+                    months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                    weeks: ['日', '一', '二', '三', '四', '五', '六'],
+                });
+
+                //设置开始时间日期框属性
+                $('#se-start').datebox({
+                    width: 200,
+                    label: "开始时间",
+                    sharedCalendar: "#sc",
+                    labelWidth: 60,
+                    currentText: "今天",
+                    closeText: "关闭",
+                    editable: false,
+                    parser: function(s) {
+                        s = $("#v_start").val();
+                        var t = Date.parse(s);
+                        if (!isNaN(t)) {
+                            return new Date(t);
+                        } else {
+                            return new Date();
+                        }
+                    },
+                    formatter: function(date) {
+                        var y = date.getFullYear();
+                        var m = date.getMonth() + 1;
+                        var d = date.getDate();
+                        $("#v_start").val(y + '/' + m + '/' + d);
+                        return y + '年' + m + '月' + d + "日";
+                    }
+                });
+                //设置结束时间日期框属性
+                $('#se-end').datebox({
+                    width: 200,
+                    label: "结束时间",
+                    sharedCalendar: "#sc",
+                    labelWidth: 60,
+                    currentText: "今天",
+                    closeText: "关闭",
+                    parser: function(s) {
+                        s = $("#v_end").val();
+                        var t = Date.parse(s);
+                        if (!isNaN(t)) {
+                            return new Date(t);
+                        } else {
+                            return new Date();
+                        }
+                    },
+                    formatter: function(date) {
+                        var y = date.getFullYear();
+                        var m = date.getMonth() + 1;
+                        var d = date.getDate();
+                        $("#v_end").val(y + '/' + m + '/' + d);
+                        return y + '年' + m + '月' + d + "日";
+                    }
+                });
+
+                //设置面板的属性
+                $p.panel({
+                    //给面板主体区域添加一个风格
+                    bodyCls: "panelcontent",
+                    //给面板添加一个底部区域
+                    footer: "#se-footer",
+                });
+                //初始化底部区域中的链接按钮
+                $(".se-footerbutton").linkbutton({
+                    width: 42,
+                    height: 30,
+                });
+
+                //用户点击确定按钮后处理的过程
+                $("#se-qd").click(function() {
+                    if ($("#v_start").val() == "" && $("#v_end").val() == "") {
+                        $('#cc').combo("setText", "");
+                    } else {
+                        $('#cc').combo("setText", $('#se-start').datebox('getValue') + "至" + $('#se-end').datebox('getValue'));
+                    }
+                    $('#cc').combo('hidePanel');
+                    $('#cc').combo('validate');
+                });
+                //用户点击清空按钮后处理的过程
+                $("#se-qk").click(function() {
+                    $(".se-toolbutton").linkbutton("unselect");
+                    $("#v_start").val("");
+                    $('#se-start').datebox('setValue', "");
+                    $("#v_end").val("");
+                    $('#se-end').datebox('setValue', "");
+                    $('#se-end').datebox('readonly', false);
+                    $('#se-start').datebox('readonly', false);
+                });
+
+                //获取当前的时间戳
+                var date = new Date();
+                var year = date.getFullYear();
+                var month = date.getMonth() + 1;
+                var day = date.getDate();
+
+                var now = year + '/' + month + '/' + day; //当前时间
+                var t = new Date(date.getTime() - 1000 * 60 * 60 * 24 * 7);
+                var p_week = t.getFullYear() + '/' + (t.getMonth() + 1) + '/' + t.getDate(); //当前时间一周前的时间
+                var t = new Date(date.getTime() - 1000 * 60 * 60 * 24);
+                var p_yesterday = t.getFullYear() + '/' + (t.getMonth() + 1) + '/' + t.getDate(); //当前时间一天前的时间
+                if ((month - 1) > 0) {
+                    var p_month = year + '/' + (month - 1) + '/' + day; //当前时间一月前的时间
+                } else {
+                    var p_month = (year - 1) + '/' + (month + 11) + '/' + day;
+                }
+                if ((month - 3) > 0) {
+                    var p_quarter = year + '/' + (month - 3) + '/' + day;
+                } else {
+                    var p_quarter = (year - 1) + '/' + (month + 9) + '/' + day; //当前时间一个季度前的时间
+                }
+                var p_year = (year - 1) + '/' + month + '/' + day; //当前时间一年前的时间
+                //设置时间区间为一周
+                $("#se-week").click(function() {
+                    $("#v_start").val(p_week);
+                    $('#se-start').datebox('setValue', p_week);
+                    $("#v_end").val(now);
+                    $('#se-end').datebox('setValue', now);
+                    $('#se-end').datebox('readonly');
+                    $('#se-start').datebox('readonly');
+                });
+                //设置时间区间为一个月
+                $("#se-month").click(function() {
+                    $("#v_start").val(p_month);
+                    $('#se-start').datebox('setValue', p_month);
+                    $("#v_end").val(now);
+                    $('#se-end').datebox('setValue', now);
+                    $('#se-end').datebox('readonly');
+                    $('#se-start').datebox('readonly');
+                });
+                //设置时间区间为一个季度
+                $("#se-quarter").click(function() {
+                    $("#v_start").val(p_quarter);
+                    $('#se-start').datebox('setValue', p_quarter);
+                    $("#v_end").val(now);
+                    $('#se-end').datebox('setValue', now);
+                    $('#se-end').datebox('readonly');
+                    $('#se-start').datebox('readonly');
+                });
+                //设置时间区间为一年
+                $("#se-year").click(function() {
+                    $("#v_start").val(p_year);
+                    $('#se-start').datebox('setValue', p_year);
+                    $("#v_end").val(now);
+                    $('#se-end').datebox('setValue', now);
+                    $('#se-end').datebox('readonly');
+                    $('#se-start').datebox('readonly');
+                });
+                //用户自定义时间区间，默认为昨天与今天
+                $("#se-past").click(function() {
+                    $("#v_start").val(p_yesterday);
+                    $('#se-start').datebox('setValue', p_yesterday);
+                    $("#v_end").val(now);
+                    $('#se-end').datebox('setValue', now);
+                    $('#se-end').datebox('readonly', false);
+                    $('#se-start').datebox('readonly', false);
+                });
+
+                //自定义验证规则
+                $.extend($.fn.validatebox.defaults.rules, {
+                    validateSE: {
+                        validator: function() {
+                            var start = $("#v_start").val();
+                            var end = $("#v_end").val();
+                            if ((start == "" && end == "") || start < end) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        },
+                        message: '请输入合法的起止日期'
+                    }
+                });
+            });
+        </script>
+    </body>
+
+</html>

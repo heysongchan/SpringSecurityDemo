@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>单元格编辑</title>
+<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../demo.css">
+<script type="text/javascript" src="../../jquery.min.js"></script>
+<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../extends/dnd/datagrid-dnd.js"></script>
+</head>
+<body>
+	<table id="tt"></table>
+	<script>
+		$(function() {
+			$('#tt').datagrid({
+				columns : [[
+				//产品名称在编辑模式时使用文本框标记
+				{
+					field : 'productname',
+					title : '产品名称',
+					width : '25%',
+				},
+				//产品类型在编辑模式时使用组合框
+				{
+					field : 'producttype',
+					title : '产品类型',
+					width : '25%',
+				},
+				//产品价格在编辑模式时使用数字框
+				{
+					field : 'productprice',
+					width : '25%',
+					title : '产品价格',
+				},
+
+				//产品销量在编辑模式时使用数字微调器
+				{
+					field : 'productvolume',
+					title : '销售量',
+					width : '25%',
+				}]],
+				data : [ {
+					productname : "空调",
+					producttype : "电器",
+					productprice : "5000",
+					productvolume : "30"
+				}, {
+					productname : "冰箱",
+					producttype : "电器",
+					productprice : "7900",
+					productvolume : "21"
+				}, {
+					productname : "瓜子",
+					producttype : "零食",
+					productprice : "3",
+					productvolume : "341"
+				}, {
+					productname : "薯片",
+					producttype : "零食",
+					productprice : "7",
+					productvolume : "897"
+				}, {
+					productname : "烤箱",
+					producttype : "电器",
+					productprice : "3500",
+					productvolume : "12"
+				}, {
+					productname : "电视",
+					producttype : "电器",
+					productprice : "4600",
+					productvolume : "67"
+				}],
+			}).datagrid('enableDnd');
+
+		});
+	</script>
+
+</body>
+
+</html>

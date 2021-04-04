@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            自增加行数据
+        </title>
+        <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../demo.css">
+        <script type="text/javascript" src="../../jquery.min.js">
+        </script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js">
+        </script>
+    </head>
+    
+    <body>
+        <style>
+            .block{ margin:5px }
+        </style>
+        <script type="text/javascript" src="http://127.0.0.1/easyui/extends/view/datagrid-detailview.js">
+        </script>
+        <div id='dg-c83'>
+        </div>
+        <div id="tb-c83">
+            <a href="#" class="easyui-linkbutton" id='add-c83' data-options="iconCls:'icon-add',plain:true">
+                新增
+            </a>
+            <a href="#" class="easyui-linkbutton" id='delete-c83' data-options="iconCls:'icon-remove',plain:true">
+                删除
+            </a>
+        </div>
+        <script>
+            //通用代码，详细内容中点击保存按钮后获取操作的行的索引
+            function save(target) {
+                var tr = $(target).closest('.datagrid-row-detail').closest('tr').prev();
+                //当前操作行的索引
+                var index = parseInt(tr.attr('datagrid-row-index'));
+                saveItem(index);
+            }
+            //通用代码，详细内容中点击取消按钮后获取操作的行的索引
+            function cancel(target) {
+                var tr = $(target).closest('.datagrid-row-detail').closest('tr').prev();
+                //当前操作行的索引
+                var index = parseInt(tr.attr('datagrid-row-index'));
+                cancelItem(index);
+            }
+
+            //通用代码，保存用户操作后的数据
+            function saveItem(index) {
+                var row = $('#dg-c83').datagrid('getRows')[index];
+                if (row.isNewRecord) {
+                    //新建数据的服务器地址，需要根据实际项目修改
+                    var url = "http://127.0.0.1/easyui/example/c8/server/createProduct.php";
+                } else {
+                    //更新数据的服务器地址,需要根据实际项目修改
+                    var url = "http://127.0.0.1/easyui/example/c8/server/updateProduct.php";
+                }
+                //通用代码
+                var $form = $('#dg-c83').datagrid('getRowDetail', index).find('form');
+                $form.form('submit', {
+                    url: url,
+                    onSubmit: function() {
+                        return $(this).form('validate');
+                    },
+                    //表单提交成功后触发
+                    success: function(data) {
+                        data.isNewRecord = false;
+                        $("#dg-c83").datagrid('reload');
+                    },
+                });
+            }
+
+            //通用代码，取消编辑
+            function cancelItem(index) {
+                var row = $('#dg-c83').datagrid('getRows')[index];
+                if (row.isNewRecord) {
+                    $('#dg-c83').datagrid('deleteRow', index);
+                } else {
+                    $('#dg-c83').datagrid('collapseRow', index);
+                }
+            }
+
+            //通用代码，新增数据
+            $("#add-c83").click(function() {
+                $('#dg-c83').datagrid('appendRow', {
+                    isNewRecord: true
+                });
+                var index = $('#dg-c83').datagrid('getRows').length - 1;
+                $('#dg-c83').datagrid('expandRow', index);
+                $('#dg-c83').datagrid('selectRow', index);
+            });
+
+            //删除数据的代码
+            $("#delete").click(function() {
+                //获取数据网格中当前选中的行
+                var row = $("#dg-c83").datagrid("getSelected");
+                if (row) {
+                    $.messager.confirm('确认', '是否确认删除这条数据?',
+                    function(r) {
+                        if (r) {
+                            //删除数据的服务器地址根据实际项目修改
+                            $.post('http://127.0.0.1/easyui/example/c8/server/deleteProduct.php', {
+                                id: row.id
+                            },
+                            function(result) {
+                                if (result.success) {
+                                    //重新加载数据网格数据
+                                    $('#dg-c83').datagrid('reload');
+                                } else {
+                                    //显示错误提示信息	                            	
+                                    $.messager.show({
+                                        title: 'Error',
+                                        msg: result.errorMsg
+                                    });
+                                }
+                            },
+                            'json');
+                        }
+                    });
+                }
+            });
+
+            $(function() {
+                $("#dg-c83").datagrid({
+                    width: 600,
+                    rownumbers: true,
+                    toolbar: "#tb-c83",
+                    url: "http://127.0.0.1/easyui/example/c8/server/retrieveProduct.php",
+                    loadMsg: "数据正在加载，请稍等",
+                    singleSelect: true,
+                    columns: [[{
+                        field: 'productname',
+                        title: '产品名称',
+                        width: '10%'
+                    },
+                    {
+                        field: 'producttype',
+                        title: '产品类型',
+                        width: '10%',
+                        formatter: formatProductType
+                    },
+                    {
+                        field: 'productprice',
+                        width: '20%',
+                        title: '产品价格'
+                    },
+                    {
+                        field: 'producttime',
+                        title: '上架时间',
+                        width: '28%',
+                        formatter: formatProductTime
+                    },
+                    {
+                        field: 'productaddress',
+                        title: '产地',
+                        width: '20%',
+                        formatter: formatProductAddress
+                    },
+                    {
+                        field: 'productvolume',
+                        title: '销售量',
+                        width: '10%'
+                    },
+                    ]],
+                    //展开行后显示行的详细内容
+                    detailFormatter: function(index, row) {
+                        //返回一个产品面板的标记
+                        return '<div class="product"></div>';
+                    },
+                    //展开行时触发的事件	
+                    onExpandRow: function(index, row) {
+                        //检查当前是否
+                        //获取产品面板对象
+                        var product = $(this).datagrid('getRowDetail', index).find('div.product');
+                        //初始化面板
+                        product.panel({
+                            border: true,
+                            //面板主体内容
+                            content: "<form  method='post' style='padding-left:20px'>" + "<input class='easyui-textbox' name='productname' data-options=\"label:'产品名称：',required:true,width:200,labelWidth:80,cls:'block'\">" + "<input class='easyui-combobox' name='producttype' data-options=\"label:'产品类型：',required:true,valueField:'id',textField:'typename',width:200,labelWidth:80,cls:'block',data:[{id:1,typename:'电器'},{id:2,typename:'食品'}]\"><br/>" + "<input class='easyui-numberbox' name='productprice' data-options=\"required:true,label:'产品价格：',min:0,width:200,labelWidth:80,precision:2,prefix:'$',cls:'block'\">" + "<input class='easyui-numberspinner' name='productvolume' data-options=\"required:true,label:'产品销量：',min:0,width:200,labelWidth:80,cls:'block'\"><br/>" + "<input class='easyui-datebox'  name = 'producttime' data-options=\"required:true,label:'上架时间：',width:200,panelWidth:200,labelWidth:80,cls:'block',editable:false,currentText:'今天',closeText:'关闭',parser:function(s){ var t = Date.parse(s);if (!isNaN(t)){return new Date(t);} else {return new Date();}}\">" + "<input class='easyui-combobox'  name='productaddress' data-options=\"required:true,label:'产品产地：',valueField:'id',textField:'city',width:200,labelWidth:80,cls:'block',data:[{id:1,city:'北京'},{id:2,city:'上海'},{id:3,city:'南京'}]\"><br/>" + "<input name='id' style='display:none'> " + "<div>" + "<a href=\"#\" class=\"easyui-linkbutton\"  onclick = 'save(this)' data-options=\"iconCls:'icon-save',plain:true\" style=\"margin-left: 400px;\">保存</a>" + "<a href=\"#\" class=\"easyui-linkbutton\"  onclick = 'cancel(this)' data-options=\"iconCls:'icon-cancel',plain:true\">取消</a>" + "</div>" + "</form>"
+                        });
+                        //加载表单的初始值
+                        $('#dg-c83').datagrid('getRowDetail', index).find('form').form('load', row);
+                        //固定自动主体内容的高度
+                        $('#dg-c83').datagrid('fixDetailRowHeight', index);
+                    },
+                    view: detailview
+                });
+
+                //格式化上架时间
+                function formatProductTime(value, row, index) {
+                    if (value !== undefined) {
+                        var date = new Date(Date.parse(value));
+                        var Year = date.getFullYear();
+                        var Month = date.getMonth() + 1;
+                        var Day = date.getDate();
+                        return Year + "年" + Month + "月" + Day + "日";
+                    } else {
+                        return "";
+                    }
+                }
+                //格式化产地
+                function formatProductAddress(value, row, index) {
+                    switch (value) {
+                    case "1":
+                        return "北京";
+                    case "2":
+                        return "上海";
+                    case "3":
+                        return "南京";
+                    default:
+                        return value;
+                    }
+                }
+                //格式化产品类型
+                function formatProductType(value, row, index) {
+                    if (value == "1") {
+                        return "电器";
+                    } else if (value == "2") {
+                        return "食品";
+                    } else {
+                        return value;
+                    }
+                }
+
+            });
+        </script>
+    </body>
+
+</html>

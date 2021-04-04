@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            缓存视图
+        </title>
+        <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../demo.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+    </head>
+    <body>
+        <script type="text/javascript" src="http://127.0.0.1/easyui/extends/view/datagrid-bufferview.js"></script>    
+		<table id="dg-bufferview"></table>
+		<script>
+			$(function(){
+				$('#dg-bufferview').datagrid({
+					url:'http://127.0.0.1/easyui/example/c11/server/bufferView.php',
+					width:500,
+					height:200,
+					view:bufferview,
+					columns:[[
+								{field:'name',title:'姓名',width:'50%'},
+								{field:'age' ,title:'年龄',width:'50%'}
+							]],
+					loadMsg:"数据正在加载，请稍等",
+					rownumbers:true,
+					pageSize:50				
+				});
+
+			});
+		</script>
+
+    </body>
+
+</html>

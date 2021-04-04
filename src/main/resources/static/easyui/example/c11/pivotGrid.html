@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>数据网格行编辑</title>
+		<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="../../demo.css">
+		<script type="text/javascript" src="../../jquery.min.js"></script>
+		<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+	</head>
+	<body>
+	<script type="text/javascript" src="http://127.0.0.1/easyui/extends/pivotgrid/jquery.pivotgrid.js"></script>
+	<a href="javascript:void(0)" class="easyui-linkbutton" style="width:70px;height:78px;" data-options="size:'large',iconCls:'icon-large-smartart',iconAlign:'top',plain:false" onclick="javascript:$('#pg-pivotgrid').pivotgrid('layout')">Layout</a>
+	<table id="pg-pivotgrid"></table>
+	<script>
+		$(function(){			
+			$('#pg-pivotgrid').pivotgrid({
+			    title:'PivotGrid',
+			    forzenColumnTitle:"产品",
+			    width:700,
+			    height:300,
+			    url:'http://127.0.0.1/easyui/example/c11/pivotgrid.json',
+			    pivot:{
+			        rows:['type','name'],
+			        columns:['year'],
+			        values:[
+			            {field:'cost'},
+			            {field:'sales'}
+			        ],
+			        filters:['year','type'],
+			    },
+			    i18n:{
+			    	rows:'rows',
+			    	columns:'columns',
+			    	filters:'filters',
+			    	fields:'fields',
+			    	values:'values',
+			    	ok:'确定',
+			    	cancel:'取消'
+			    }
+			});
+		})
+	</script>
+	</body>
+</html>
+
+

@@ -4,23 +4,45 @@
 <head>
     <title>登录</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" type="text/css" href="./js/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="./js/themes/material/easyui.css">
     <link rel="stylesheet" type="text/css" href="./js/themes/icon.css">
+    <script src="./util.js"></script>
     <script src="./js/jquery.min.js"></script>
     <script src="./js/jquery.easyui.min.js"></script>
 </head>
 
 <body>
-    <a id="btn" href="#">增加标准</a>
-    <a id="btn1" href="#">删除标准</a>
-    <input id="cbx" name="dept" value="">
-    <div id="dd">content</div>
+    <div id="win"></div>
+    <div id="p" style="padding: 10px;">
+        <div title="a" iconCls='icon-add'>
+            <a id="btn" href="#">增加标准</a>
+            <a id="btn1" href="#">删除标准</a>
+            <input id="cbx" name="dept" value="">
+            <br>
+        </div>
+        <div title="b"></div>
+        <div title="c"></div>
+
+        <div id="tt"></div>
+    </div>
 
 
-    <div id="tt"></div>
+
     <script>
 
         $(function () {
+            $("#win").dialog({
+                title: "选择检查项目",
+                width: 500,
+                height: 400
+            });
+
+
+            var w = $("#p").tabs({
+
+                width: "80%", height: 300
+            }).width();
+
             $('#btn').linkbutton({
                 width: "10%", height: 32, iconCls: 'icon-add',
                 onClick: function (a) {
@@ -29,7 +51,7 @@
                             data: result,
                             onLoadSuccess: function (data) {
                                 $("a[name='opera']").linkbutton({
-                                    plain: true, iconCls: 'icon-add',
+                                    plain: true, iconCls: 'icon-newspaper-add',
                                     onClick: function (a) {
                                         $("#dd").dialog({ title: "title", width: "60%", height: 600 });
                                     }
@@ -82,8 +104,18 @@
                         return str;
                     }
                 }
-                ]]
-            })
+                ]],
+                onLoadSuccess: function (data) {
+
+                    $("a[name='opera']").linkbutton({
+                        onClick: function () {
+                            var v = $("#tt").datagrid("getSelected");
+                            console.log(v);
+                        }
+                    });
+
+                }
+            });
 
 
 

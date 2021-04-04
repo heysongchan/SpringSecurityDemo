@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>数据网格数据搜索</title>
+		<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="../../demo.css">
+		<script type="text/javascript" src="../../jquery.min.js"></script>
+		<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+
+	</head>
+	<body>
+	<script type="text/javascript" src="http://127.0.0.1/easyui/example/c7/start_end.js"></script>
+	<div id='dg-search'></div>
+	<!--设置工具栏-->
+	<div id="tb-search" style="padding:5px;height:auto">
+		<div id='se' data-options="label:'请输入起始日期',labelWidth:'100',width:350" style="display:inline"></div>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-search" id='search'>搜索</a>
+	</div>
+	<script>
+		$(function(){
+			$("#se").start_end();
+			//点击搜索后的处理事件
+			$("#search").click(function(){			
+				//获取起止日期框的值
+				var seValues = $("#se").start_end('getValues');
+				//使用指定条件加载数据
+				$('#dg-search').datagrid('load',{
+					start:seValues.start,
+					end: seValues.end
+				});
+			});
+			$("#dg-search").datagrid({
+				width:500,
+				url:"http://127.0.0.1/easyui/example/c7/server/getSearch.php",
+				toolbar:'#tb-search',
+				columns:[[
+					{field:'productname' ,title:'产品名称',width:'15%'},
+					{field:'producttype',title:'产品类型',width:'15%',formatter:formatProductType},
+					{field:'productprice' ,title:'产品价格',width:'15%'},
+					{field:'producttime' ,title:'上架时间',width:'25%',formatter:formatProductTime},
+					{field:'productaddress' ,title:'产地',width:'10%',formatter:formatProductAddress},
+					{field:'productvolume' ,title:'销售量',width:'10%'},
+				]],
+				loadMsg:"数据正在加载，请稍等",
+			});
+			//格式化上架时间
+			function formatProductTime(value,row,index){
+				var date=new Date(Date.parse(value));
+				var Year=date.getFullYear();
+				var Month=date.getMonth()+1;
+				var Day=date.getDate();
+				return  Year+"年"+Month+"月"+Day+"日";				
+			}
+			//格式化产地
+			function formatProductAddress(value,row,index){
+				switch(value){
+					case "1":
+						return  "北京";
+					case "2":
+						return "上海";
+					case "3":
+						return  "南京";
+					default:
+						return value;
+				}
+			}
+			//格式化产品类型
+			function formatProductType(value,row,index){
+				if(value == "1"){
+					return "电器";
+				}else if(value == "2"){
+					return "食品";
+				}else{
+					return value;
+				}
+			}
+		});
+	</script>
+	</body>
+</html>
+

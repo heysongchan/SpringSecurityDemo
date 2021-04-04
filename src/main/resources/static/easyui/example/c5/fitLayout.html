@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>自适应高度布局</title>
+        <link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../demo.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+	</head>
+	<body>
+    <div style="margin:20px 0;">
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="addItem()">新增内容</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="removeItem()">删除内容</a>
+    </div>
+    <div id="cc" style="width:700px;height:350px;">
+        <div data-options="region:'north'" style="height:50px"></div>
+        <div data-options="region:'south'" style="height:50px;"></div>
+        <div data-options="region:'west'" style="width:150px;"></div>
+        <div data-options="region:'center'" style="padding:20px">
+            <p>面板内容</p>
+            <p>面板内容</p>
+            <p>面板内容</p>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function(){
+            $('#cc').layout();
+            setHeight();
+        });
+        function addItem(){
+            $('#cc').layout('panel','center').append('<p>新增面板内容</p>');
+            setHeight();
+        }
+        function removeItem(){
+            $('#cc').layout('panel','center').find('p:last').remove();
+            setHeight();
+        }
+        //该函数动态调整布局高度
+        function setHeight(){
+			//获取布局对象
+            var c = $('#cc');
+			//获取布局中部区域的面板对象
+            var p = c.layout('panel','center');
+			//获取面板高度
+            var oldHeight = p.outerHeight();
+			//重新设置面板的高度自动适应其内容
+            p.panel('resize', {height:'auto'});
+			//获取面板新的高度
+            var newHeight = p.outerHeight();
+			//重新设置布局的高度
+            c.layout('resize',{
+                height: (c.height() + newHeight - oldHeight)
+            });
+        }
+    </script>
+</body>
+</html>
+
