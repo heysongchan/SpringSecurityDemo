@@ -22,3 +22,22 @@ logging:
   level:
     root: INFO
   config: classpath:logback-spring.xml
+  
+  
+  
+# server:
+#   port: 8080
+# spring:
+#   cloud:
+#     gateway:
+#       routes:
+#       - id: path_route
+#         uri: http://localhost:8081/        
+#         predicates:
+#         - Path=/gateway/**        
+#         filters:
+#         - StripPrefix=1
+        
+# 这里使用了StripPrefix这个过滤器，对应StripPrefixGatewayFilterFactory这个内置的过滤器工厂类，
+# 作用是转发请求前 从请求中剥离的路径个数，StripPrefix=0表示不剥离，StripPrefix=1表示剥离一层。
+#比如，请求/gateway/bar/foo，去除掉前面两个前缀之后，最后转发到目标服务的路径为/foo
